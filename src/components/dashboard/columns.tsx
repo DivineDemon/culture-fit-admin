@@ -13,20 +13,6 @@ import {
 import WarningModal from "../warning-modal";
 import DetailSheet from "./detail-sheet";
 
-export type RowData = {
-  id: string;
-  company_name: string;
-  email: string;
-  password: string;
-  owner_name: string;
-  company_type: string;
-  website: string;
-  technology?: string;
-  contact_number: string;
-  company_address: string;
-  description: string;
-};
-
 const ActionsCell = ({ row }: { row: Row<RowData> }) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState<boolean>(false);

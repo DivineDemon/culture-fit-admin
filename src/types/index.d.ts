@@ -28,3 +28,18 @@ declare type CompanyInfo = {
   company_address: string,
   company_description: string,
 };
+
+declare type RowData = {
+  id: string;
+  company_name: string;
+  email: string;
+  password: string;
+  owner_name: string;
+  owner_email: string;
+  company_type: string;
+  website: string;
+  technology?: string;
+  contact_number: string;
+  company_address: string;
+  description: string;
+};

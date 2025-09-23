@@ -1,5 +1,4 @@
 import type { Employee } from "@/components/company-detail/employee-column";
-import type { RowData } from "@/components/dashboard/columns";
 
 export const rows: RowData[] = [
   {
