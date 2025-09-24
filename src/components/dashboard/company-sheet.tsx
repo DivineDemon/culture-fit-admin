@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
-import { type Dispatch, type SetStateAction } from "react";
+import { type Dispatch, type SetStateAction, useState } from "react";
+import { useDropzone } from "react-dropzone";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
@@ -32,6 +33,7 @@ interface CompanySheetProps {
 
 const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
   const [postCompany, { isLoading }] = usePostCompanyMutation();
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [updateCompany, { isLoading: isLoadingUpdate }] = useUpdateCompanyMutation();
 
   const form = useForm<z.infer<typeof companySchema>>({
@@ -49,6 +51,8 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
           phone_number: "",
           company_address: "",
           company_description: "",
+          policy_document: "",
+          policy_file_name: "",
         },
   });
 
@@ -66,6 +70,8 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
           phone_number: data.phone_number ?? "",
           company_address: data.company_address ?? "",
           company_description: data.company_description ?? "",
+          policy_document: data.policy_document ?? "",
+          policy_file_name: data.policy_file_name ?? "",
         },
       });
       if (response.data) {
@@ -87,6 +93,8 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
       company_address: data.company_address ?? "",
       company_description: data.company_description ?? "",
       password: data.password ?? "",
+      policy_document: data.policy_document ?? "",
+      policy_file_name: data.policy_file_name ?? "",
     });
 
     if (response.data) {
@@ -97,6 +105,18 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
 
     setOpen(false);
   };
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop: (acceptedFiles) => {
+      if (acceptedFiles.length > 0) {
+        setUploadedFile(acceptedFiles[0]);
+      }
+    },
+    multiple: false,
+    accept: {
+      "application/pdf": [],
+    },
+  });
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -255,6 +275,45 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
                   <FormControl>
                     <Textarea placeholder="Enter company description" className="h-36 resize-none" {...field} />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="policy_document"
+              render={() => (
+                <FormItem>
+                  <FormLabel>Company Policy Document</FormLabel>
+                  <div
+                    {...getRootProps()}
+                    className="flex w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-border border-dashed bg-muted/30 px-5 py-10 text-center transition hover:bg-muted/50"
+                  >
+                    <input
+                      {...getInputProps({
+                        onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            setUploadedFile(file);
+                            form.setValue("policy_document", URL.createObjectURL(file));
+                            form.setValue("policy_file_name", file.name);
+                          }
+                        },
+                      })}
+                    />
+
+                    {uploadedFile ? (
+                      <span className="font-medium text-base text-primary">{uploadedFile.name}</span>
+                    ) : isDragActive ? (
+                      <span className="font-medium text-base">Drop the file here...</span>
+                    ) : (
+                      <>
+                        <span className="font-medium text-base">Drag & Drop your policy file here</span>
+                        <span className="text-muted-foreground text-sm">Only .pdf files are allowed</span>
+                      </>
+                    )}
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}

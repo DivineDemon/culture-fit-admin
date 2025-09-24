@@ -12,14 +12,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import type { RowData } from "@/types";
 import WarningModal from "../warning-modal";
-import DetailSheet from "./detail-sheet";
 
 const ActionsCell = ({ row }: { row: Row<RowData> }) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState<boolean>(false);
   const [warn, setWarn] = useState<boolean>(false);
-  const [detail, setDetail] = useState<boolean>(false);
-  const [selectedCompany, setSelectedCompany] = useState<RowData | null>(null);
 
   return (
     <>
@@ -44,7 +41,6 @@ const ActionsCell = ({ row }: { row: Row<RowData> }) => {
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {
-              setSelectedCompany(row.original);
               setWarn(true);
             }}
           >
@@ -60,7 +56,6 @@ const ActionsCell = ({ row }: { row: Row<RowData> }) => {
         setOpen={setWarn}
       />
       <CompanySheet id={row.original.id} open={open} setOpen={setOpen} company={row.original} />
-      <DetailSheet open={detail} setOpen={setDetail} company={selectedCompany ?? undefined} />
     </>
   );
 };

@@ -1,20 +1,24 @@
-import { Loader2 } from "lucide-react";
+import { Loader2, Upload, UserPlus } from "lucide-react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
+import EmployeeSheet from "@/components/company-detail/employee-add-sheet";
 import { useEmployeeColumns } from "@/components/company-detail/employee-column";
 import CulturePolicies from "@/components/dashboard/company-policy";
 import { DataTable } from "@/components/data-table";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { employees } from "@/lib/constants";
 import { useGetCompanyQuery } from "@/store/services/company";
+import { useGetEmployeesQuery } from "@/store/services/employee";
 
 const UserDetail = () => {
-  const { id } = useParams<{ id: string }>();
   const columns = useEmployeeColumns();
+  const [open, setOpen] = useState(false);
+  const { id } = useParams<{ id: string }>();
   const [search, setSearch] = useState<string>("");
 
+  const { data: employee, isLoading: isLoadingEmployee } = useGetEmployeesQuery(id ?? "");
   const { data: company, isLoading } = useGetCompanyQuery(id ?? "");
 
   if (isLoading) {
@@ -27,84 +31,116 @@ const UserDetail = () => {
 
   return (
     <div className="flex h-full w-full flex-col gap-5 overflow-auto">
-      <div className="flex h-full w-full flex-col items-start justify-start gap-3.5">
-        <Label className="flex items-center justify-center font-bold text-[24px] text-primary leading-[24px]">
+      <div className="flex items-center justify-between">
+        <Label className="font-bold text-primary text-xl sm:text-2xl md:text-3xl">
           {company?.company_name ?? "Company Not Found"}
         </Label>
-        <div className="flex w-full items-center justify-center">
-          <Card className="w-full rounded-xl shadow-none">
-            <CardContent className="grid w-full grid-cols-1 gap-4 md:grid-cols-4">
-              <div className="flex flex-col rounded-lg border p-4 shadow">
-                <p className="font-semibold text-lg">Company Email</p>
-                <p className="text-muted-foreground text-sm">{company?.email || "N/A"}</p>
-              </div>
-
-              <div className="flex flex-col rounded-lg border p-4 shadow">
-                <p className="font-semibold text-lg">Owner Name</p>
-                <p className="text-muted-foreground text-sm">{company?.owner_name || "N/A"}</p>
-              </div>
-
-              <div className="flex flex-col rounded-lg border p-4 shadow">
-                <p className="font-semibold text-lg">Website</p>
-                <a
-                  href={company?.domain || "N/A"}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground text-sm underline"
-                >
-                  {company?.domain || "N/A"}
-                </a>
-              </div>
-
-              <div className="flex flex-col rounded-lg border p-4 shadow">
-                <p className="font-semibold text-lg">Company Size</p>
-                <p className="text-muted-foreground text-sm">{company?.company_size || "N/A"}</p>
-              </div>
-
-              <div className="flex flex-col rounded-lg border p-4 shadow">
-                <p className="font-semibold text-lg">Company Type</p>
-                <p className="text-muted-foreground text-sm">{company?.company_type || "N/A"}</p>
-              </div>
-
-              <div className="flex flex-col rounded-lg border p-4 shadow">
-                <p className="font-semibold text-lg">Phone</p>
-                <p className="text-muted-foreground text-sm">{company?.phone_number || "N/A"}</p>
-              </div>
-
-              <div className="flex flex-col rounded-lg border p-4 shadow">
-                <p className="font-semibold text-lg">Address</p>
-                <p className="text-muted-foreground text-sm">{company?.company_address || "N/A"}</p>
-              </div>
-
-              <div className="col-span-4 flex flex-col rounded-lg border p-4 shadow">
-                <p className="font-semibold text-lg">Description</p>
-                <p className="w-full text-muted-foreground text-sm">{company?.company_description || "N/A"}</p>
-              </div>
-            </CardContent>
-          </Card>
+        <div className="hidden flex-col gap-2.5 md:flex md:flex-row">
+          <Button variant="default" size="sm" type="button" onClick={() => setOpen(true)}>
+            Add Employee <UserPlus className="ml-1 size-4" />
+          </Button>
+          <Button variant="default" size="sm" type="button">
+            Upload Policy <UserPlus className="ml-1 size-4" />
+          </Button>
+        </div>
+        <div className="flex gap-2.5 md:hidden">
+          <Button variant="default" size="sm" type="button" onClick={() => setOpen(true)}>
+            <UserPlus className="ml-1 size-4" />
+          </Button>
+          <Button variant="default" size="sm" type="button">
+            <Upload className="ml-1 size-4" />
+          </Button>
         </div>
       </div>
-      <div className="grid h-full w-full grid-cols-2 items-start justify-start gap-3.5 overflow-auto">
-        <CulturePolicies />
-        <div className="flex h-fit w-full flex-col items-start justify-center gap-5 rounded-xl border p-5">
-          <div className="flex w-full items-start justify-between">
-            <span className="w-full text-left font-medium text-[28px] text-primary leading-[36px]">
-              Company Employees
-            </span>
+
+      <Card className="w-full rounded-xl shadow-none">
+        <CardContent className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="flex flex-col rounded-lg border p-4 shadow">
+            <p className="font-semibold text-base sm:text-lg">Company Email</p>
+            <p className="text-muted-foreground text-sm">{company?.email || "N/A"}</p>
+          </div>
+
+          <div className="flex flex-col rounded-lg border p-4 shadow">
+            <p className="font-semibold text-base sm:text-lg">Owner Name</p>
+            <p className="text-muted-foreground text-sm">{company?.owner_name || "N/A"}</p>
+          </div>
+
+          <div className="flex flex-col rounded-lg border p-4 shadow">
+            <p className="font-semibold text-base sm:text-lg">Website</p>
+            <a
+              href={company?.domain || "N/A"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground text-sm underline"
+            >
+              {company?.domain || "N/A"}
+            </a>
+          </div>
+
+          <div className="flex flex-col rounded-lg border p-4 shadow">
+            <p className="font-semibold text-base sm:text-lg">Company Size</p>
+            <p className="text-muted-foreground text-sm">{company?.company_size || "N/A"}</p>
+          </div>
+
+          <div className="flex flex-col rounded-lg border p-4 shadow">
+            <p className="font-semibold text-base sm:text-lg">Company Type</p>
+            <p className="text-muted-foreground text-sm">{company?.company_type || "N/A"}</p>
+          </div>
+
+          <div className="flex flex-col rounded-lg border p-4 shadow">
+            <p className="font-semibold text-base sm:text-lg">Phone</p>
+            <p className="text-muted-foreground text-sm">{company?.phone_number || "N/A"}</p>
+          </div>
+
+          <div className="flex flex-col rounded-lg border p-4 shadow">
+            <p className="font-semibold text-base sm:text-lg">Address</p>
+            <p className="text-muted-foreground text-sm">{company?.company_address || "N/A"}</p>
+          </div>
+
+          <div className="col-span-1 flex flex-col rounded-lg border p-4 shadow sm:col-span-2 lg:col-span-4">
+            <p className="font-semibold text-base sm:text-lg">Description</p>
+            <p className="w-full text-muted-foreground text-sm">{company?.company_description || "N/A"}</p>
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="flex flex-col gap-5 lg:grid lg:grid-cols-3">
+        <div className="order-2 lg:order-1">
+          <CulturePolicies />
+        </div>
+
+        <div className="order-1 flex h-[600px] flex-col gap-5 rounded-xl border p-4 sm:p-6 md:h-full lg:order-2 lg:col-span-2">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <span className="font-medium text-primary text-xl sm:text-2xl md:text-[28px]">Company Employees</span>
             <Input
               type="text"
-              className="w-1/2"
+              className="w-full sm:w-1/2 lg:w-1/3"
               placeholder="Filter Users by Email..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <DataTable
-            columns={columns}
-            data={search ? employees.filter((e) => e.email.toLowerCase().includes(search.toLowerCase())) : employees}
-          />
+
+          {isLoadingEmployee ? (
+            <div className="flex w-full items-center justify-center py-10">
+              <Loader2 className="size-8 animate-spin text-primary" />
+            </div>
+          ) : (
+            <DataTable
+              columns={columns}
+              data={
+                search
+                  ? (employee ?? []).filter((e: { email: string }) =>
+                      e.email.toLowerCase().includes(search.toLowerCase()),
+                    )
+                  : (employee ?? [])
+              }
+            />
+          )}
         </div>
       </div>
+
+      <EmployeeSheet open={open} setOpen={setOpen} id={id ?? ""} />
     </div>
   );
 };

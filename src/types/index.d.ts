@@ -27,6 +27,8 @@ declare type CompanyInfo = {
   phone_number: string,
   company_address: string,
   company_description: string,
+  policy_document: string,
+  policy_file_name: string,
 };
 
 declare type RowData = {
@@ -50,4 +52,13 @@ export type Policy = {
   file_name: string;
   file_size: number;
   description: string | null;
+};
+
+declare type Employee = {
+  first_name: string;
+  last_name: string;
+  email: string;
+  position: string;
+  salary: number;
+  company_id: string;
 };
