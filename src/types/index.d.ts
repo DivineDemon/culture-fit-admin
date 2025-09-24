@@ -43,3 +43,11 @@ declare type RowData = {
   company_address: string;
   description: string;
 };
+
+export type Policy = {
+  id: string;
+  company_id: string;
+  file_name: string;
+  file_size: number;
+  description: string | null;
+};
