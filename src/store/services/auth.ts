@@ -1,3 +1,4 @@
+import type { PostLogin, PostLoginResponse } from "@/types";
 import { setToken } from "../slices/global";
 import { api } from "./core";
 

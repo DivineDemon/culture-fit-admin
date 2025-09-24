@@ -1,4 +1,4 @@
-import { Download, FileText, Loader2, TriangleAlert } from "lucide-react";
+import { CircleAlert, Download, FileText, Loader2, TriangleAlert } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -57,7 +57,7 @@ const CulturePolicies = () => {
       <CardHeader>
         <CardTitle className="font-semibold text-primary text-xl">Company Documents</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="h-[618px] space-y-4 overflow-y-scroll">
         <div className="flex flex-col items-start gap-2.5">
           {data && data.length > 0 ? (
             data.map((policy, idx: number) => (
@@ -77,7 +77,10 @@ const CulturePolicies = () => {
               </div>
             ))
           ) : (
-            <p className="text-muted-foreground">No documents found.</p>
+            <p className="flex h-[618px] w-full flex-col items-center justify-center text-muted-foreground">
+              <CircleAlert className="size-8 text-pri" />
+              No documents found.
+            </p>
           )}
         </div>
       </CardContent>

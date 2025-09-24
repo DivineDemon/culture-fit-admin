@@ -10,6 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import type { RowData } from "@/types";
 import WarningModal from "../warning-modal";
 import DetailSheet from "./detail-sheet";
 
