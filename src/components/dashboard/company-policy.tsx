@@ -35,7 +35,7 @@ const CulturePolicies = () => {
 
   if (isLoading) {
     return (
-      <div className="flex h-full w-full items-center justify-center rounded-2xl border">
+      <div className="flex h-[618px] w-full items-center justify-center rounded-2xl border">
         <Loader2 className="size-8 animate-spin text-primary" />
       </div>
     );
@@ -43,7 +43,7 @@ const CulturePolicies = () => {
 
   if (error) {
     return (
-      <div className="flex h-full w-full items-center justify-center rounded-2xl border">
+      <div className="flex h-[618px] w-full items-center justify-center rounded-2xl border">
         <p className="flex flex-col items-center justify-center gap-2.5 text-muted-foreground">
           <TriangleAlert className="size-8 text-destructive" />
           Something went wrong
@@ -53,7 +53,7 @@ const CulturePolicies = () => {
   }
 
   return (
-    <Card className="h-fit w-full shadow-none">
+    <Card className="h-full w-full shadow-none">
       <CardHeader>
         <CardTitle className="font-semibold text-primary text-xl">Company Documents</CardTitle>
       </CardHeader>

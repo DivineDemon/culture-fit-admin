@@ -10,15 +10,18 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useGetCompanyQuery } from "@/store/services/company";
-import { useGetEmployeesQuery } from "@/store/services/employee";
+import { useGetEmployeesQuery } from "@/store/services/employees";
 
 const UserDetail = () => {
   const columns = useEmployeeColumns();
   const [open, setOpen] = useState(false);
   const { id } = useParams<{ id: string }>();
+  const companyId = id ?? "";
   const [search, setSearch] = useState<string>("");
 
-  const { data: employee, isLoading: isLoadingEmployee } = useGetEmployeesQuery(id ?? "");
+  const { data: employee, isLoading: isLoadingEmployee } = useGetEmployeesQuery(id, {
+    refetchOnMountOrArgChange: true,
+  });
   const { data: company, isLoading } = useGetCompanyQuery(id ?? "");
 
   if (isLoading) {
@@ -104,12 +107,12 @@ const UserDetail = () => {
         </CardContent>
       </Card>
 
-      <div className="flex flex-col gap-5 lg:grid lg:grid-cols-3">
+      <div className="flex h-full flex-col gap-5 lg:grid lg:grid-cols-3">
         <div className="order-2 lg:order-1">
           <CulturePolicies />
         </div>
 
-        <div className="order-1 flex h-[600px] flex-col gap-5 rounded-xl border p-4 sm:p-6 md:h-full lg:order-2 lg:col-span-2">
+        <div className="order-1 flex h-full flex-col gap-5 rounded-xl border p-4 sm:p-6 md:h-full lg:order-2 lg:col-span-2">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <span className="font-medium text-primary text-xl sm:text-2xl md:text-[28px]">Company Employees</span>
             <Input
@@ -140,7 +143,7 @@ const UserDetail = () => {
         </div>
       </div>
 
-      <EmployeeSheet open={open} setOpen={setOpen} id={id ?? ""} />
+      <EmployeeSheet open={open} setOpen={setOpen} companyId={companyId} />
     </div>
   );
 };

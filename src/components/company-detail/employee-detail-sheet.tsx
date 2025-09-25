@@ -24,7 +24,9 @@ const EmployeeDetailSheet = ({ open, setOpen, employee }: EmployeeDetailSheetPro
         <div className="flex flex-col gap-3 p-3">
           <div className="grid grid-cols-3 items-start gap-2 border-b pb-2">
             <Label className="text-muted-foreground text-sm">Name:</Label>
-            <p className="col-span-2 font-medium text-foreground text-sm">{employee.name}</p>
+            <p className="col-span-2 font-medium text-foreground text-sm capitalize">
+              {`${employee.first_name} ${employee.last_name}`}
+            </p>
           </div>
 
           <div className="grid grid-cols-3 items-start gap-2 border-b pb-2">
@@ -33,28 +35,13 @@ const EmployeeDetailSheet = ({ open, setOpen, employee }: EmployeeDetailSheetPro
           </div>
 
           <div className="grid grid-cols-3 items-start gap-2 border-b pb-2">
-            <Label className="text-muted-foreground text-sm">Role:</Label>
-            <p className="col-span-2 font-medium text-foreground text-sm">{employee.role}</p>
+            <Label className="text-muted-foreground text-sm">Position:</Label>
+            <p className="col-span-2 font-medium text-foreground text-sm capitalize">{employee.position}</p>
           </div>
 
           <div className="grid grid-cols-3 items-start gap-2 border-b pb-2">
-            <Label className="text-muted-foreground text-sm">Website:</Label>
-            <p className="col-span-2 font-medium text-foreground text-sm">{employee.website}</p>
-          </div>
-
-          <div className="grid grid-cols-3 items-start gap-2 border-b pb-2">
-            <Label className="text-muted-foreground text-sm">Phone:</Label>
-            <p className="col-span-2 font-medium text-foreground text-sm">{employee.phone}</p>
-          </div>
-
-          <div className="grid grid-cols-3 items-start gap-2 border-b pb-2">
-            <Label className="text-muted-foreground text-sm">Department:</Label>
-            <p className="col-span-2 font-medium text-foreground text-sm leading-relaxed">{employee.department}</p>
-          </div>
-
-          <div className="grid grid-cols-3 items-start gap-2">
-            <Label className="text-muted-foreground text-sm">Designation:</Label>
-            <p className="col-span-2 font-medium text-foreground text-sm">{employee.designation}</p>
+            <Label className="text-muted-foreground text-sm">Salary:</Label>
+            <p className="col-span-2 font-medium text-foreground text-sm leading-relaxed">{employee.salary}</p>
           </div>
         </div>
       </SheetContent>

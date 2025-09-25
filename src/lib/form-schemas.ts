@@ -40,23 +40,12 @@ export const companySchema = z.object({
   policy_file_name: z.string().optional(),
 });
 
-export const employeeSchema = z.object({
-  first_name: z
-    .string()
-    .min(1, "First name is required")
-    .regex(/^[A-Za-z\s]+$/, "First name must contain only alphabets"),
-
-  last_name: z
-    .string()
-    .min(1, "Last name is required")
-    .regex(/^[A-Za-z\s]+$/, "Last name must contain only alphabets"),
-
-  email: z.string().email("Invalid email address"),
-
-  position: z
-    .string()
-    .min(1, "Position is required")
-    .regex(/^[A-Za-z\s]+$/, "Position must contain only alphabets"),
-
-  salary: z.number().min(1, "Salary must be a number"),
+export const employeesSchema = z.object({
+  first_name: z.string().min(2, "First name is required"),
+  last_name: z.string().min(2, "Last name is required"),
+  email: z.string().email("Invalid email"),
+  position: z.string().min(2, "Position is required"),
+  salary: z.coerce.number().min(0, "Salary must be a positive number"),
+  is_candidate: z.boolean().default(false),
+  files: z.array(z.any()).optional(),
 });

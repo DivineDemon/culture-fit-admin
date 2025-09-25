@@ -31,7 +31,7 @@ export const companies = api.injectEndpoints({
     }),
     getPolicies: build.query({
       query: (id: string) => ({
-        url: `/companies/${id}/all_files`,
+        url: `/companies/${id}/files`,
         method: "GET",
       }),
       providesTags: ["policies"],
@@ -44,6 +44,13 @@ export const companies = api.injectEndpoints({
         responseHandler: (response) => response.blob(),
       }),
     }),
+    deleteCompany: build.mutation({
+      query: ({ id }: { id: string }) => ({
+        url: `/companies/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["companies"],
+    }),
   }),
 });
 
@@ -54,4 +61,5 @@ export const {
   useUpdateCompanyMutation,
   useGetPoliciesQuery,
   useLazyDownloadPolicyQuery,
+  useDeleteCompanyMutation,
 } = companies;

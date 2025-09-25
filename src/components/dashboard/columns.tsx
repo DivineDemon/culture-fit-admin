@@ -2,6 +2,7 @@ import type { Column, Row } from "@tanstack/react-table";
 import { ArrowDownAZ, FilePenLine, FileText, MoreHorizontal, Trash } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import CompanySheet from "@/components/dashboard/company-sheet";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,6 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useDeleteCompanyMutation } from "@/store/services/company";
 import type { RowData } from "@/types";
 import WarningModal from "../warning-modal";
 
@@ -17,6 +19,18 @@ const ActionsCell = ({ row }: { row: Row<RowData> }) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState<boolean>(false);
   const [warn, setWarn] = useState<boolean>(false);
+  const [deleteCompany, { isLoading }] = useDeleteCompanyMutation();
+
+  const handleDelete = async () => {
+    const response = await deleteCompany({ id: row.original.id });
+
+    if ("data" in response) {
+      toast.success("Company Deleted Successfully!");
+      setWarn(false);
+    } else {
+      toast.error("Failed to Delete Company!");
+    }
+  };
 
   return (
     <>
@@ -45,15 +59,17 @@ const ActionsCell = ({ row }: { row: Row<RowData> }) => {
             }}
           >
             <Trash />
-            <span className="ml-2 text-sm">Deactivate</span>
+            <span className="ml-2 text-sm">Delete</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       <WarningModal
         open={warn}
         title="Are you sure?"
-        text={<span>Are you sure you want to Deactivate this company?</span>}
+        text={<span>Are you sure you want to Delete this company?</span>}
         setOpen={setWarn}
+        isLoading={isLoading}
+        cta={handleDelete}
       />
       <CompanySheet id={row.original.id} open={open} setOpen={setOpen} company={row.original} />
     </>
