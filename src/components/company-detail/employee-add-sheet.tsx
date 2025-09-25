@@ -131,7 +131,6 @@ const CompanySheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheetP
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex h-full flex-col gap-5 overflow-auto px-4 pb-6">
-            {/* First Name */}
             <FormField
               control={form.control}
               name="first_name"
@@ -147,8 +146,6 @@ const CompanySheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheetP
                 </FormItem>
               )}
             />
-
-            {/* Last Name */}
             <FormField
               control={form.control}
               name="last_name"
@@ -164,8 +161,6 @@ const CompanySheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheetP
                 </FormItem>
               )}
             />
-
-            {/* Email */}
             <FormField
               control={form.control}
               name="email"
@@ -181,8 +176,6 @@ const CompanySheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheetP
                 </FormItem>
               )}
             />
-
-            {/* Position */}
             <FormField
               control={form.control}
               name="position"
@@ -198,8 +191,6 @@ const CompanySheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheetP
                 </FormItem>
               )}
             />
-
-            {/* Salary */}
             <FormField
               control={form.control}
               name="salary"
@@ -209,14 +200,17 @@ const CompanySheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheetP
                     Salary<span className="text-destructive">*</span>
                   </FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="0000" {...field} />
+                    <Input
+                      type="number"
+                      placeholder="0000"
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
-            {/* Candidate Switch */}
             <FormField
               control={form.control}
               name="is_candidate"
@@ -236,8 +230,6 @@ const CompanySheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheetP
                 </FormItem>
               )}
             />
-
-            {/* Files Upload */}
             <FormField
               control={form.control}
               name="files"
@@ -275,8 +267,6 @@ const CompanySheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheetP
                 </FormItem>
               )}
             />
-
-            {/* Submit Button */}
             {isLoading || isLoadingUpdate ? (
               <Button type="submit" variant="default" className="mt-auto flex items-center justify-center">
                 <Loader2 className="size-4 animate-spin" />

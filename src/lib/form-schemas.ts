@@ -45,7 +45,7 @@ export const employeesSchema = z.object({
   last_name: z.string().min(2, "Last name is required"),
   email: z.string().email("Invalid email"),
   position: z.string().min(2, "Position is required"),
-  salary: z.coerce.number().min(0, "Salary must be a positive number"),
-  is_candidate: z.boolean().default(false),
+  salary: z.number().min(0, "Salary must be a positive number"),
+  is_candidate: z.boolean().optional(),
   files: z.array(z.any()).optional(),
 });

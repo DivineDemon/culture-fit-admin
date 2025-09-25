@@ -107,15 +107,6 @@ export const useEmployeeColumns = () => {
         <span className="font-semibold text-[#71717A] text-sm">{row.getValue("email")}</span>
       ),
     },
-    // {
-    //   accessorKey: "position",
-    //   header: "Designation",
-    //   cell: ({ row }: { row: Row<Employee> }) => (
-    //     <span className="font-semibold text-[#71717A] text-sm capitalize">
-    //       {row.getValue("position")}
-    //     </span>
-    //   ),
-    // },
     {
       accessorKey: "position",
       header: ({ column }: { column: Column<Employee> }) => (
