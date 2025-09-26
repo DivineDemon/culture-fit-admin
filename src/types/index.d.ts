@@ -31,21 +31,6 @@ declare type CompanyInfo = {
   policy_file_name: string;
 };
 
-declare type RowData = {
-  id: string;
-  company_name: string;
-  email: string;
-  password: string;
-  owner_name: string;
-  owner_email: string;
-  company_type: string;
-  website: string;
-  technology?: string;
-  contact_number: string;
-  company_address: string;
-  description: string;
-};
-
 export type Policy = {
   id: string;
   company_id: string;

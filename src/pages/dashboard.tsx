@@ -11,7 +11,7 @@ const Dashboard = () => {
   const columns = useRowColumns();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState<string>("");
-  const { data, isLoading } = useGetCompaniesQuery();
+  const { data: companies, isLoading } = useGetCompaniesQuery();
 
   return (
     <>
@@ -54,8 +54,10 @@ const Dashboard = () => {
               columns={columns}
               data={
                 search
-                  ? (data ?? []).filter((e: { email: string }) => e.email.toLowerCase().includes(search.toLowerCase()))
-                  : (data ?? [])
+                  ? (companies ?? []).filter((e: { email: string }) =>
+                      e.email.toLowerCase().includes(search.toLowerCase()),
+                    )
+                  : (companies ?? [])
               }
             />
           )}
