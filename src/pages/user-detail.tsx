@@ -1,15 +1,17 @@
 import { Loader2, Upload, UserPlus } from "lucide-react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
+import { toast } from "sonner";
 import EmployeeSheet from "@/components/company-detail/employee-add-sheet";
 import { useEmployeeColumns } from "@/components/company-detail/employee-column";
 import CulturePolicies from "@/components/dashboard/company-policy";
 import { DataTable } from "@/components/data-table";
+import UploadModal from "@/components/file-uploader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useGetCompanyQuery } from "@/store/services/company";
+import { useGetCompanyQuery, usePostPolicyMutation } from "@/store/services/company";
 import { useGetEmployeesQuery } from "@/store/services/employees";
 
 const UserDetail = () => {
@@ -18,11 +20,30 @@ const UserDetail = () => {
   const { id } = useParams<{ id: string }>();
   const companyId = id ?? "";
   const [search, setSearch] = useState<string>("");
+  const [uploadOpen, setUploadOpen] = useState(false);
 
   const { data: employee, isLoading: isLoadingEmployee } = useGetEmployeesQuery(id, {
     refetchOnMountOrArgChange: true,
   });
   const { data: company, isLoading } = useGetCompanyQuery(id ?? "");
+  const [postPolicy, { isLoading: isUploading }] = usePostPolicyMutation();
+
+  const handleUpload = async (files: File[]) => {
+    if (!companyId) return;
+    const formData = new FormData();
+    files.forEach((file) => {
+      formData.append("file", file);
+    });
+    try {
+      const response = await postPolicy({ id: companyId, formData });
+      if (response) {
+        toast.success("Files uploaded successfully");
+      }
+      setUploadOpen(false);
+    } catch (_err) {
+      toast.error("Failed to upload files");
+    }
+  };
 
   if (isLoading) {
     return (
@@ -42,15 +63,15 @@ const UserDetail = () => {
           <Button variant="default" size="sm" type="button" onClick={() => setOpen(true)}>
             Add Employee <UserPlus className="ml-1 size-4" />
           </Button>
-          <Button variant="default" size="sm" type="button">
-            Upload Policy <UserPlus className="ml-1 size-4" />
+          <Button variant="default" size="sm" type="button" onClick={() => setUploadOpen(true)}>
+            Upload Policy <Upload className="ml-1 size-4" />
           </Button>
         </div>
         <div className="flex gap-2.5 md:hidden">
           <Button variant="default" size="sm" type="button" onClick={() => setOpen(true)}>
             <UserPlus className="ml-1 size-4" />
           </Button>
-          <Button variant="default" size="sm" type="button">
+          <Button variant="default" size="sm" type="button" onClick={() => setUploadOpen(true)}>
             <Upload className="ml-1 size-4" />
           </Button>
         </div>
@@ -144,6 +165,12 @@ const UserDetail = () => {
       </div>
 
       <EmployeeSheet open={open} setOpen={setOpen} companyId={companyId} />
+      <UploadModal
+        open={uploadOpen}
+        onClose={() => setUploadOpen(false)}
+        onUpload={handleUpload}
+        isLoading={isUploading}
+      />
     </div>
   );
 };

@@ -80,7 +80,23 @@ const ActionsCell = ({ row }: { row: Row<Employee> }) => {
         isLoading={isLoading}
         cta={handleDelete}
       />
-      <EmployeeSheet open={open} setOpen={setOpen} id={row.original.id} companyId={row.original.company_id} />
+      <EmployeeSheet
+        open={open}
+        setOpen={setOpen}
+        id={row.original.id}
+        companyId={row.original.company_id}
+        employee={
+          row.original as {
+            first_name: string;
+            last_name: string;
+            email: string;
+            position: string;
+            salary: number;
+            is_candidate: boolean;
+            files?: File[] | undefined;
+          }
+        }
+      />
       <EmployeeDetailSheet id={row.original.id} open={detailOpen} setOpen={setDetailOpen} employee={row.original} />
     </>
   );

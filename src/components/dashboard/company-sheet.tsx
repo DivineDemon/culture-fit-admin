@@ -97,7 +97,7 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
       policy_file_name: data.policy_file_name ?? "",
     });
 
-    if (response.data) {
+    if (response) {
       toast.success("Company Created Successfully!");
     } else {
       toast.error("Something went wrong, Please try again!");

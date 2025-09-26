@@ -235,7 +235,7 @@ const CompanySheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheetP
               name="files"
               render={() => (
                 <FormItem>
-                  <FormLabel>Company Policy Document</FormLabel>
+                  <FormLabel>Employee Document</FormLabel>
                   <div
                     {...getRootProps()}
                     className="flex w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-border border-dashed bg-muted/30 px-5 py-10 text-center transition hover:bg-muted/50"
@@ -246,7 +246,7 @@ const CompanySheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheetP
                           const file = e.target.files?.[0];
                           if (file) {
                             setUploadedFile(file);
-                            form.setValue("files", [URL.createObjectURL(file)]);
+                            form.setValue("files", [file]);
                           }
                         },
                       })}
@@ -258,7 +258,7 @@ const CompanySheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheetP
                       <span className="font-medium text-base">Drop the file here...</span>
                     ) : (
                       <>
-                        <span className="font-medium text-base">Drag & Drop your policy file here</span>
+                        <span className="font-medium text-base">Drag & Drop your Employee PDF file here</span>
                         <span className="text-muted-foreground text-sm">Only .pdf files are allowed</span>
                       </>
                     )}

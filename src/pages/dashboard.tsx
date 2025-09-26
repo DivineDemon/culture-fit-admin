@@ -11,9 +11,7 @@ const Dashboard = () => {
   const columns = useRowColumns();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState<string>("");
-  const { data, isLoading } = useGetCompaniesQuery({
-    refetchOnMountOrArgChange: true,
-  });
+  const { data, isLoading } = useGetCompaniesQuery();
 
   return (
     <>
