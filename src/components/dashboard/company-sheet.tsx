@@ -62,6 +62,7 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
         id,
         data: {
           ...data,
+          id,
           password: data.password ?? "",
           owner_name: data.owner_name ?? "",
           domain: data.domain ?? "",
