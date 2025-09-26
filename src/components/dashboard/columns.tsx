@@ -12,10 +12,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useDeleteCompanyMutation } from "@/store/services/company";
-import type { RowData } from "@/types";
+import type { CompanyInfo } from "@/types";
 import WarningModal from "../warning-modal";
 
-const ActionsCell = ({ row }: { row: Row<RowData> }) => {
+const ActionsCell = ({ row }: { row: Row<CompanyInfo> }) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState<boolean>(false);
   const [warn, setWarn] = useState<boolean>(false);
@@ -80,41 +80,41 @@ export const useRowColumns = () => {
   return [
     {
       accessorKey: "company_name",
-      header: ({ column }: { column: Column<RowData> }) => (
+      header: ({ column }: { column: Column<CompanyInfo> }) => (
         <Button variant="ghost" type="button" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           Company Name
           <ArrowDownAZ className="ml-2" />
         </Button>
       ),
-      cell: ({ row }: { row: Row<RowData> }) => (
+      cell: ({ row }: { row: Row<CompanyInfo> }) => (
         <span className="ml-3 cursor-pointer font-medium">{row.getValue("company_name")}</span>
       ),
     },
     {
       accessorKey: "email",
       header: "Email",
-      cell: ({ row }: { row: Row<RowData> }) => (
+      cell: ({ row }: { row: Row<CompanyInfo> }) => (
         <span className="font-semibold text-[#71717A] text-sm">{row.getValue("email")}</span>
       ),
     },
     {
       accessorKey: "company_address",
       header: "Address",
-      cell: ({ row }: { row: Row<RowData> }) => (
+      cell: ({ row }: { row: Row<CompanyInfo> }) => (
         <span className="font-semibold text-[#71717A] text-sm">{row.getValue("company_address")}</span>
       ),
     },
     {
       accessorKey: "company_description",
       header: "Description",
-      cell: ({ row }: { row: Row<RowData> }) => (
+      cell: ({ row }: { row: Row<CompanyInfo> }) => (
         <span className="font-semibold text-[#71717A] text-sm">{row.getValue("company_description")}</span>
       ),
     },
     {
       id: "actions",
       header: "Actions",
-      cell: ({ row }: { row: Row<RowData> }) => <ActionsCell row={row} />,
+      cell: ({ row }: { row: Row<CompanyInfo> }) => <ActionsCell row={row} />,
     },
   ];
 };

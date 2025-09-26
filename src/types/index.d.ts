@@ -17,6 +17,7 @@ declare type PostLoginResponse = {
 };
 
 declare type CompanyInfo = {
+  id: string;
   company_name: string;
   email: string;
   password?: string;
