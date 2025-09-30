@@ -18,13 +18,20 @@ interface EmployeeSheetProps {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
   employee?: {
-    first_name: string;
-    last_name: string;
+    id: string;
+    company_id: string;
+    user_id: string;
+    name: string;
     email: string;
-    position: string;
+    password: string | null;
+    date_of_birth: string;
+    user_phone_number: string;
+    user_designation: string;
+    department: string;
     salary: number;
+    is_role_model: boolean;
     is_candidate: boolean;
-    files?: File[];
+    files: string[];
   };
   companyId: string;
 }
@@ -49,11 +56,14 @@ const CompanySheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheetP
   const form = useForm<z.infer<typeof employeesSchema>>({
     resolver: zodResolver(employeesSchema),
     defaultValues: {
-      first_name: "",
-      last_name: "",
+      name: "",
       email: "",
-      position: "",
+      date_of_birth: "",
+      user_phone_number: "",
+      user_designation: "",
+      department: "",
       salary: 0,
+      is_role_model: false,
       is_candidate: false,
       files: [],
     },
@@ -65,14 +75,13 @@ const CompanySheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheetP
         id,
         data: {
           ...data,
+          name: data.name ?? "",
+
           files: data.files ?? [],
           is_candidate: data.is_candidate ?? false,
           salary: data.salary ?? 0,
           company_id: companyId,
-          first_name: data.first_name ?? "",
-          last_name: data.last_name ?? "",
           email: data.email ?? "",
-          position: data.position ?? "",
         },
       });
 
@@ -93,10 +102,8 @@ const CompanySheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheetP
         is_candidate: data.is_candidate ?? false,
         salary: data.salary ?? 0,
         company_id: companyId,
-        first_name: data.first_name ?? "",
-        last_name: data.last_name ?? "",
+        name: data.name ?? "",
         email: data.email ?? "",
-        position: data.position ?? "",
       },
     });
 
@@ -111,15 +118,18 @@ const CompanySheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheetP
 
   useEffect(() => {
     if (id && employee) {
-      form.setValue("first_name", employee.first_name ?? "");
-      form.setValue("last_name", employee.last_name ?? "");
+      form.setValue("name", employee.name ?? "");
       form.setValue("email", employee.email ?? "");
-      form.setValue("position", employee.position ?? "");
       form.setValue("salary", employee.salary ?? 0);
       form.setValue("is_candidate", employee.is_candidate ?? false);
-      form.setValue("files", employee.files ?? []);
+      form.setValue("files", []);
+      form.setValue("date_of_birth", employee.date_of_birth ?? "");
+      form.setValue("user_phone_number", employee.user_phone_number ?? "");
+      form.setValue("department", employee.department ?? "");
+      form.setValue("user_designation", employee.user_designation ?? "");
+      form.setValue("is_role_model", employee.is_role_model ?? false);
     }
-  }, [id, employee, form.setValue]);
+  }, [id, employee, form]);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -133,11 +143,11 @@ const CompanySheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheetP
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex h-full flex-col gap-5 overflow-auto px-4 pb-6">
             <FormField
               control={form.control}
-              name="first_name"
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    First Name<span className="text-destructive">*</span>
+                    Full Name<span className="text-destructive">*</span>
                   </FormLabel>
                   <FormControl>
                     <Input placeholder="DigiMark Developer" {...field} />
@@ -146,21 +156,7 @@ const CompanySheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheetP
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="last_name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Last Name<span className="text-destructive">*</span>
-                  </FormLabel>
-                  <FormControl>
-                    <Input placeholder="DigiMark Developer" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+
             <FormField
               control={form.control}
               name="email"
@@ -178,19 +174,60 @@ const CompanySheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheetP
             />
             <FormField
               control={form.control}
-              name="position"
+              name="date_of_birth"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    Position<span className="text-destructive">*</span>
-                  </FormLabel>
+                  <FormLabel>Date of Birth</FormLabel>
                   <FormControl>
-                    <Input type="text" placeholder="Software Engineer" {...field} />
+                    <Input type="date" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name="user_phone_number"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone Number</FormLabel>
+                  <FormControl>
+                    <Input type="tel" placeholder="+92 300 1234567" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="department"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Department</FormLabel>
+                  <FormControl>
+                    <Input type="text" placeholder="HR / IT / Marketing" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="user_designation"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Designation</FormLabel>
+                  <FormControl>
+                    <Input type="text" placeholder="Team Lead / Developer" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name="salary"

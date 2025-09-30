@@ -41,11 +41,38 @@ export const companySchema = z.object({
 });
 
 export const employeesSchema = z.object({
-  first_name: z.string().min(2, "First name is required"),
-  last_name: z.string().min(2, "Last name is required"),
-  email: z.string().email("Invalid email"),
-  position: z.string().min(2, "Position is required"),
+  name: z
+    .string()
+    .min(2, "Full name is required")
+    .regex(/^[a-zA-Z\s]+$/, "Name must only contain letters and spaces"),
+
+  email: z
+    .string()
+    .min(1, "Email is required")
+    .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email format"),
+
+  date_of_birth: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date of Birth must be in YYYY-MM-DD format"),
+
+  user_phone_number: z
+    .string()
+    .regex(/^\+?[0-9]{10,15}$/, "Phone number must be 10–15 digits and may start with +")
+    .optional(),
+
+  user_designation: z
+    .string()
+    .min(2, "Designation is required")
+    .regex(/^[a-zA-Z\s]+$/, "Designation must only contain letters and spaces"),
+
+  department: z
+    .string()
+    .min(2, "Department is required")
+    .regex(/^[a-zA-Z\s]+$/, "Department must only contain letters and spaces")
+    .optional(),
+
   salary: z.number().min(0, "Salary must be a positive number"),
+
+  is_role_model: z.boolean().optional(),
   is_candidate: z.boolean().optional(),
-  files: z.array(z.any()).optional(),
+
+  files: z.array(z.instanceof(File)).optional(),
 });

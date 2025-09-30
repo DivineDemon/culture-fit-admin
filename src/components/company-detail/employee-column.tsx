@@ -1,5 +1,11 @@
 import type { Column, Row } from "@tanstack/react-table";
-import { ArrowDownAZ, FilePenLine, FileText, MoreHorizontal, Trash } from "lucide-react";
+import {
+  ArrowDownAZ,
+  FilePenLine,
+  FileText,
+  MoreHorizontal,
+  Trash,
+} from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import EmployeeSheet from "@/components/company-detail/employee-add-sheet";
@@ -16,13 +22,19 @@ import WarningModal from "../warning-modal";
 
 export type Employee = {
   id: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  position: string;
-  salary: number;
-  is_candidate: boolean | null;
   company_id: string;
+  user_id: string;
+  name: string;
+  email: string;
+  password: string | null;
+  date_of_birth: string;
+  user_phone_number: string;
+  user_designation: string;
+  department: string;
+  salary: number;
+  is_role_model: boolean;
+  is_candidate: boolean;
+  files: string[];
 };
 
 const ActionsCell = ({ row }: { row: Row<Employee> }) => {
@@ -87,17 +99,29 @@ const ActionsCell = ({ row }: { row: Row<Employee> }) => {
         companyId={row.original.company_id}
         employee={
           row.original as {
-            first_name: string;
-            last_name: string;
+            id: string;
+            company_id: string;
+            user_id: string;
+            name: string;
             email: string;
-            position: string;
+            password: string | null;
+            date_of_birth: string;
+            user_phone_number: string;
+            user_designation: string;
+            department: string;
             salary: number;
+            is_role_model: boolean;
             is_candidate: boolean;
-            files?: File[] | undefined;
+            files: string[];
           }
         }
       />
-      <EmployeeDetailSheet id={row.original.id} open={detailOpen} setOpen={setDetailOpen} employee={row.original} />
+      <EmployeeDetailSheet
+        id={row.original.id}
+        open={detailOpen}
+        setOpen={setDetailOpen}
+        employee={row.original}
+      />
     </>
   );
 };
@@ -105,47 +129,71 @@ const ActionsCell = ({ row }: { row: Row<Employee> }) => {
 export const useEmployeeColumns = () => {
   return [
     {
-      accessorKey: "first_name",
+      accessorKey: "name",
       header: ({ column }: { column: Column<Employee> }) => (
-        <Button variant="ghost" type="button" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+        <Button
+          variant="ghost"
+          type="button"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
           Name
           <ArrowDownAZ className="ml-2" />
         </Button>
       ),
       cell: ({ row }: { row: Row<Employee> }) => (
-        <span className="ml-3 font-medium capitalize">{row.getValue("first_name")}</span>
+        <span className="ml-3 font-medium capitalize">
+          {row.getValue("name")}
+        </span>
       ),
     },
     {
       accessorKey: "email",
       header: "Email",
       cell: ({ row }: { row: Row<Employee> }) => (
-        <span className="font-semibold text-[#71717A] text-sm">{row.getValue("email")}</span>
+        <span className="font-semibold text-[#71717A] text-sm">
+          {row.getValue("email")}
+        </span>
       ),
     },
     {
-      accessorKey: "position",
+      accessorKey: "user_designation",
       header: ({ column }: { column: Column<Employee> }) => (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" type="button" className="flex items-center gap-2">
-              Designation
+            <Button
+              variant="ghost"
+              type="button"
+              className="flex items-center gap-2"
+            >
+              Status
               <ArrowDownAZ className="ml-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
-            <DropdownMenuItem onClick={() => column.setFilterValue(undefined)}>All</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => column.setFilterValue(false)}>Employee</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => column.setFilterValue(true)}>Candidate</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => column.setFilterValue(undefined)}>
+              All
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => column.setFilterValue(false)}>
+              Employee
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => column.setFilterValue(true)}>
+              Candidate
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       ),
       cell: ({ row }: { row: Row<Employee> }) => (
-        <span className="ml-3 font-semibold text-[#71717A] text-sm capitalize">{row.getValue("position")}</span>
+        <span className="ml-3 font-semibold text-[#71717A] text-sm capitalize">
+          {row.original.is_candidate ? "Candidate" : "Employee"}
+        </span>
       ),
-      filterFn: (row: Row<Employee>, _columnId: string, value: string) => {
+      filterFn: (
+        row: Row<Employee>,
+        _columnId: string,
+        value: boolean | undefined
+      ) => {
         if (value === undefined) return true;
-        return row.original.is_candidate === (value === "true");
+        return row.original.is_candidate === value;
       },
     },
     {

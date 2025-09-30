@@ -40,26 +40,39 @@ export type Policy = {
   description: string | null;
 };
 
+declare type EmployeeFile = {
+  id: string;
+  file_name: string;
+};
+
 declare type Employees = {
   company_id: string;
-  first_name: string;
-  last_name: string;
+  name: string;
   email: string;
-  position: string;
   salary: number;
   is_candidate: boolean | null;
-  files: string[] | null;
+  is_role_model?: boolean | null;
+  date_of_birth?: string | null;
+  user_phone_number?: string | null;
+  user_designation?: string | null;
+  department?: string | null;
+  password?: string | null;
+  files: File[] | null;
 };
 
 declare type EmployeeResponse = {
   id: string;
   company_id: string;
-  user_id: string;
-  first_name: string;
-  last_name: string;
+  user_id: string | null;
+  name: string;
   email: string;
-  position: string;
+  password: string | null;
+  date_of_birth: string | null;
+  user_phone_number: string | null;
+  user_designation: string | null;
+  department: string | null;
   salary: number;
-  is_candidate: boolean | null;
-  files: string[] | null;
+  is_role_model: boolean;
+  is_candidate: boolean;
+  files: EmployeeFile[];
 };

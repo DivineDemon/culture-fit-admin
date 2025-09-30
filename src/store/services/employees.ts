@@ -9,19 +9,25 @@ export const employees = api.injectEndpoints({
         method: "GET",
       }),
     }),
-    postEmployee: build.mutation({
-      query: ({ id, data }: { id: string; data: Employees }) => {
+    postEmployee: build.mutation<EmployeeResponse, { id: string; data: Employees }>({
+      query: ({ id, data }) => {
         const formData = new FormData();
-        formData.append("first_name", data.first_name);
-        formData.append("last_name", data.last_name);
+        formData.append("name", data.name);
         formData.append("email", data.email);
-        formData.append("position", data.position);
         formData.append("salary", String(data.salary));
-        formData.append("is_candidate", String(data.is_candidate));
+        formData.append("is_candidate", String(data.is_candidate ?? false));
+        formData.append("is_role_model", String(data.is_role_model ?? false));
         formData.append("company_id", id);
 
+        if (data.date_of_birth) formData.append("date_of_birth", data.date_of_birth);
+        if (data.user_phone_number) formData.append("user_phone_number", data.user_phone_number);
+        if (data.user_designation) formData.append("user_designation", data.user_designation);
+        if (data.department) formData.append("department", data.department);
+        if (data.password) formData.append("password", data.password);
         if (data.files && data.files.length > 0) {
-          formData.append("files", data.files[0]);
+          data.files.forEach((file) => {
+            formData.append("files", file);
+          });
         }
 
         return {
@@ -32,12 +38,34 @@ export const employees = api.injectEndpoints({
       },
       transformResponse: (response: { data: EmployeeResponse }) => response.data,
     }),
-    updateEmployee: build.mutation({
-      query: ({ id, data }: { id: string; data: Employees }) => ({
-        url: `/employees/${id}`,
-        method: "PUT",
-        body: data,
-      }),
+    updateEmployee: build.mutation<EmployeeResponse, { id: string; data: Employees }>({
+      query: ({ id, data }) => {
+        const formData = new FormData();
+        formData.append("name", data.name);
+        formData.append("email", data.email);
+        formData.append("salary", String(data.salary));
+        formData.append("is_candidate", String(data.is_candidate ?? false));
+        formData.append("is_role_model", String(data.is_role_model ?? false));
+        formData.append("company_id", data.company_id);
+
+        if (data.date_of_birth) formData.append("date_of_birth", data.date_of_birth);
+        if (data.user_phone_number) formData.append("user_phone_number", data.user_phone_number);
+        if (data.user_designation) formData.append("user_designation", data.user_designation);
+        if (data.department) formData.append("department", data.department);
+        if (data.password) formData.append("password", data.password);
+        if (data.files && data.files.length > 0) {
+          data.files.forEach((file) => {
+            formData.append("files", file);
+          });
+        }
+
+        return {
+          url: `/employees/${id}`,
+          method: "PUT",
+          body: formData,
+        };
+      },
+      transformResponse: (response: { data: EmployeeResponse }) => response.data,
     }),
     getEmployee: build.query({
       query: (id: string) => ({
