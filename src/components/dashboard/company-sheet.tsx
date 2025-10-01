@@ -19,7 +19,7 @@ interface CompanySheetProps {
   setOpen: Dispatch<SetStateAction<boolean>>;
   company?: {
     company_name: string;
-    email: string;
+    company_email: string;
     password?: string;
     owner_name?: string;
     company_size?: string;
@@ -42,7 +42,7 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
       ? { ...company }
       : {
           company_name: "",
-          email: "",
+          company_email: "",
           password: "",
           owner_name: "",
           company_size: "",
@@ -62,7 +62,9 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
         id,
         data: {
           ...data,
-          id,
+          id: id,
+          company_name: data.company_name ?? "",
+          company_email: data.company_email ?? "",
           password: data.password ?? "",
           owner_name: data.owner_name ?? "",
           domain: data.domain ?? "",
@@ -87,6 +89,8 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
     const response = await postCompany({
       ...data,
       domain: data.domain ?? "",
+      company_email: data.company_email ?? "",
+      company_name: data.company_name ?? "",
       company_size: data.company_size ?? "",
       company_type: data.company_type ?? "",
       owner_name: data.owner_name ?? "",
@@ -147,7 +151,7 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
 
             <FormField
               control={form.control}
-              name="email"
+              name="company_email"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>

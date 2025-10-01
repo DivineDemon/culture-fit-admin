@@ -7,11 +7,26 @@ import { ModeToggle } from "./mode-toggle";
 import { useTheme } from "./theme-provider";
 import { Button } from "./ui/button";
 import WarningModal from "./warning-modal";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "@/types/global";
+import { setMode } from "@/store/slices/global";
+import { Switch } from "./ui/switch";
 
 const Navbar = () => {
   const { theme } = useTheme();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [logout, setLogout] = useState<boolean>(false);
+  const { mode } = useSelector((state: RootState) => state.global);
+
+
+   const toggleValidationMode = () => {
+    if (mode === "employees") {
+      dispatch(setMode("candidates"));
+    } else {
+      dispatch(setMode("employees"));
+    }
+  };
 
   return (
     <>
@@ -24,6 +39,18 @@ const Navbar = () => {
             onClick={() => navigate("/dashboard")}
           />
           <div className="flex items-center justify-center gap-2.5">
+            <div className="flex items-center gap-2.5  justify-center pr-3">
+              <span className="text-muted-foreground text-xs font-medium">
+                Employees
+              </span>
+              <Switch
+                checked={mode === "employees"}
+                onCheckedChange={toggleValidationMode}
+              />
+              <span className="text-muted-foreground text-xs font-medium">
+                Candidates
+              </span>
+            </div>
             <Button size="sm" variant="destructive" onClick={() => setLogout(true)}>
               Logout
             </Button>

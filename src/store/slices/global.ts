@@ -4,6 +4,7 @@ import type { GlobalState } from "@/types";
 const initialState: GlobalState = {
   Company: "",
   token: "",
+  mode: "employees",
 };
 
 const globalSlice = createSlice({
@@ -16,8 +17,11 @@ const globalSlice = createSlice({
     setToken: (state, action) => {
       state.token = action.payload;
     },
+    setMode: (state, action) => {
+      state.mode = action.payload as "employees" | "candidates";
+    },
   },
 });
 
-export const { setCompany, setToken } = globalSlice.actions;
+export const { setCompany, setToken, setMode } = globalSlice.actions;
 export default globalSlice.reducer;

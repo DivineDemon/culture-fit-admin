@@ -1,8 +1,12 @@
 import type { Column, Row } from "@tanstack/react-table";
-import { ArrowDownAZ, FilePenLine, FileText, MoreHorizontal, Trash } from "lucide-react";
+import {
+  ArrowDownAZ,
+  FilePenLine,
+  FileText,
+  MoreHorizontal,
+} from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 import CompanySheet from "@/components/dashboard/company-sheet";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,26 +15,24 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useDeleteCompanyMutation } from "@/store/services/company";
 import type { CompanyInfo } from "@/types";
-import WarningModal from "../warning-modal";
 
 const ActionsCell = ({ row }: { row: Row<CompanyInfo> }) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState<boolean>(false);
-  const [warn, setWarn] = useState<boolean>(false);
-  const [deleteCompany, { isLoading }] = useDeleteCompanyMutation();
+  // const [warn, setWarn] = useState<boolean>(false);
+  // const [deleteCompany, { isLoading }] = useDeleteCompanyMutation();
 
-  const handleDelete = async () => {
-    const response = await deleteCompany({ id: row.original.id });
+  // const handleDelete = async () => {
+  //   const response = await deleteCompany({ id: row.original.id });
 
-    if ("data" in response) {
-      toast.success("Company Deleted Successfully!");
-      setWarn(false);
-    } else {
-      toast.error("Failed to Delete Company!");
-    }
-  };
+  //   if ("data" in response) {
+  //     toast.success("Company Deleted Successfully!");
+  //     setWarn(false);
+  //   } else {
+  //     toast.error("Failed to Delete Company!");
+  //   }
+  // };
 
   return (
     <>
@@ -53,25 +55,30 @@ const ActionsCell = ({ row }: { row: Row<CompanyInfo> }) => {
             <FileText />
             <span className="ml-2 text-sm">View Details</span>
           </DropdownMenuItem>
-          <DropdownMenuItem
+          {/* <DropdownMenuItem
             onClick={() => {
               setWarn(true);
             }}
           >
             <Trash />
             <span className="ml-2 text-sm">Delete</span>
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
         </DropdownMenuContent>
       </DropdownMenu>
-      <WarningModal
+      {/* <WarningModal
         open={warn}
         title="Are you sure?"
         text={<span>Are you sure you want to Delete this company?</span>}
         setOpen={setWarn}
         isLoading={isLoading}
         cta={handleDelete}
+      /> */}
+      <CompanySheet
+        id={row.original.id}
+        open={open}
+        setOpen={setOpen}
+        company={row.original}
       />
-      <CompanySheet id={row.original.id} open={open} setOpen={setOpen} company={row.original} />
     </>
   );
 };
@@ -81,34 +88,46 @@ export const useRowColumns = () => {
     {
       accessorKey: "company_name",
       header: ({ column }: { column: Column<CompanyInfo> }) => (
-        <Button variant="ghost" type="button" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+        <Button
+          variant="ghost"
+          type="button"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
           Company Name
           <ArrowDownAZ className="ml-2" />
         </Button>
       ),
       cell: ({ row }: { row: Row<CompanyInfo> }) => (
-        <span className="ml-3 cursor-pointer font-medium">{row.getValue("company_name")}</span>
+        <span className="ml-3 cursor-pointer font-medium">
+          {row.getValue("company_name") || "N/A"}
+        </span>
       ),
     },
     {
-      accessorKey: "email",
+      accessorKey: "company_email",
       header: "Email",
       cell: ({ row }: { row: Row<CompanyInfo> }) => (
-        <span className="font-semibold text-[#71717A] text-sm">{row.getValue("email")}</span>
+        <span className="font-semibold text-[#71717A] text-sm">
+          {row.getValue("company_email") || "N/A"}
+        </span>
       ),
     },
     {
       accessorKey: "company_address",
       header: "Address",
       cell: ({ row }: { row: Row<CompanyInfo> }) => (
-        <span className="font-semibold text-[#71717A] text-sm">{row.getValue("company_address")}</span>
+        <span className="font-semibold text-[#71717A] text-sm">
+          {row.getValue("company_address") || "N/A"}
+        </span>
       ),
     },
     {
       accessorKey: "company_description",
       header: "Description",
       cell: ({ row }: { row: Row<CompanyInfo> }) => (
-        <span className="font-semibold text-[#71717A] text-sm">{row.getValue("company_description")}</span>
+        <span className="font-semibold text-[#71717A] text-sm">
+          {row.getValue("company_description") || "N/A"}
+        </span>
       ),
     },
     {

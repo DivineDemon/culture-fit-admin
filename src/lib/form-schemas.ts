@@ -6,9 +6,9 @@ export const companySchema = z.object({
     .min(2, "Company name must be at least 2 characters")
     .regex(/^[A-Za-z\s]+$/, "Company name must contain only alphabets"),
 
-  email: z.string().email("Invalid company email address"),
+  company_email: z.string().email("Invalid company email address"),
 
-  password: z.string().min(8, "Password must be at least 8 characters").optional(),
+  password: z.string().min(6, "Password must be at least 6 characters").optional(),
 
   owner_name: z
     .string()
@@ -51,17 +51,26 @@ export const employeesSchema = z.object({
     .min(1, "Email is required")
     .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email format"),
 
-  date_of_birth: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date of Birth must be in YYYY-MM-DD format"),
+  password: z.string().min(6, "Password must be at least 6 characters").regex(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
+    "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+  ).optional(),
+
+  date_of_birth: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Date of Birth must be in YYYY-MM-DD format")
+    .optional(),
 
   user_phone_number: z
     .string()
-    .regex(/^\+?[0-9]{10,15}$/, "Phone number must be 10–15 digits and may start with +")
+    .regex(/^\+?[0-9]{10,15}$/, "Phone number must be 10-15 digits and may start with +")
     .optional(),
 
   user_designation: z
     .string()
     .min(2, "Designation is required")
-    .regex(/^[a-zA-Z\s]+$/, "Designation must only contain letters and spaces"),
+    .regex(/^[a-zA-Z\s\-_\/]+$/, "Designation must only contain letters, spaces, -, /, or _")
+    .optional(),
 
   department: z
     .string()

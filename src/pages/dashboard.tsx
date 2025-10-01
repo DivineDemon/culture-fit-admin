@@ -6,6 +6,7 @@ import { DataTable } from "@/components/data-table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useGetCompaniesQuery } from "@/store/services/company";
+import type { CompanyInfo } from "@/types";
 
 const Dashboard = () => {
   const columns = useRowColumns();
@@ -17,9 +18,16 @@ const Dashboard = () => {
     <>
       <div className="flex h-full w-full flex-col items-start justify-start gap-5 md:overflow-hidden">
         <div className="flex w-full items-start justify-start gap-2.5">
-          <span className="flex-1 text-left font-bold text-[32px] text-primary leading-[32px]">Companies</span>
+          <span className="flex-1 text-left font-bold text-[32px] text-primary leading-[32px]">
+            Companies
+          </span>
           <div className="hidden flex-col gap-2.5 md:flex md:flex-row">
-            <Button variant="default" size="sm" type="button" onClick={() => setOpen(true)}>
+            <Button
+              variant="default"
+              size="sm"
+              type="button"
+              onClick={() => setOpen(true)}
+            >
               Add Company &nbsp;
               <Building2 />
             </Button>
@@ -29,7 +37,12 @@ const Dashboard = () => {
             </Button>
           </div>
           <div className="flex gap-2.5 md:hidden">
-            <Button variant="default" size="icon" type="button" onClick={() => setOpen(true)}>
+            <Button
+              variant="default"
+              size="icon"
+              type="button"
+              onClick={() => setOpen(true)}
+            >
               <Building2 />
             </Button>
             <Button variant="default" size="icon" type="button">
@@ -54,10 +67,12 @@ const Dashboard = () => {
               columns={columns}
               data={
                 search
-                  ? (companies ?? []).filter((e: { email: string }) =>
-                      e.email.toLowerCase().includes(search.toLowerCase()),
+                  ? ((companies ?? []) as CompanyInfo[]).filter((e) =>
+                      e.company_email
+                        .toLowerCase()
+                        .includes(search.toLowerCase())
                     )
-                  : (companies ?? [])
+                  : ((companies ?? []) as CompanyInfo[])
               }
             />
           )}

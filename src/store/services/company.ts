@@ -35,19 +35,20 @@ export const companies = api.injectEndpoints({
       invalidatesTags: ["companies"],
       transformResponse: (response: { data: CompanyInfo }) => response.data,
     }),
-    getCompanies: build.query<CompanyInfo[], void>({
+    getCompanies: build.query<CompanyInfo, void>({
       query: () => ({
         url: "/companies/",
         method: "GET",
       }),
       providesTags: ["companies"],
-      transformResponse: (response: CompanyInfo[]) => response,
+      transformResponse: (response: { status_code:number ; message: string; data: CompanyInfo }) => response.data,
     }),
     getCompany: build.query({
       query: (id: string) => ({
         url: `/companies/${id}`,
         method: "GET",
       }),
+      transformResponse: (response: { status: string; message: string; data: CompanyInfo }) => response.data,
     }),
     updateCompany: build.mutation({
       query: ({ id, data }: { id: string; data: CompanyInfo }) => ({
@@ -55,6 +56,8 @@ export const companies = api.injectEndpoints({
         method: "PUT",
         body: data,
       }),
+      transformResponse: (response: { status: string; message: string; data: CompanyInfo }) => response.data,
+      invalidatesTags: ["companies"],
     }),
     postPolicy: build.mutation({
       query: ({ id, formData }: { id: string; formData: FormData }) => ({

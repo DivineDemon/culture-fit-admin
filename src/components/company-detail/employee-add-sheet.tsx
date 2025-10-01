@@ -1,17 +1,35 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
-import { type Dispatch, type SetStateAction, useEffect, useState } from "react";
+import { type Dispatch, type SetStateAction, useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { Switch } from "@/components/ui/switch";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import {
+  usePostEmployeeMutation,
+  useUpdateEmployeeMutation,
+} from "@/store/services/employees";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/types/global";
 import { employeesSchema } from "@/lib/form-schemas";
-import { usePostEmployeeMutation, useUpdateEmployeeMutation } from "@/store/services/employees";
+import { Switch } from "../ui/switch";
 
 interface EmployeeSheetProps {
   id?: string;
@@ -36,21 +54,28 @@ interface EmployeeSheetProps {
   companyId: string;
 }
 
-const CompanySheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheetProps) => {
-  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+const EmployeeSheet = ({
+  id,
+  open,
+  setOpen,
+  employee,
+  companyId,
+}: EmployeeSheetProps) => {
   const [postEmployee, { isLoading }] = usePostEmployeeMutation();
-  const [updateEmployee, { isLoading: isLoadingUpdate }] = useUpdateEmployeeMutation();
+  const [updateEmployee, { isLoading: isLoadingUpdate }] =
+    useUpdateEmployeeMutation();
+  const { mode } = useSelector((state: RootState) => state.global);
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: (acceptedFiles) => {
       if (acceptedFiles.length > 0) {
-        setUploadedFile(acceptedFiles[0]);
+        setUploadedFiles(acceptedFiles);
+        form.setValue("files", acceptedFiles);
       }
     },
-    multiple: false,
-    accept: {
-      "application/pdf": [],
-    },
+    multiple: true,
+    accept: { "application/pdf": [] },
   });
 
   const form = useForm<z.infer<typeof employeesSchema>>({
@@ -58,13 +83,14 @@ const CompanySheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheetP
     defaultValues: {
       name: "",
       email: "",
+      salary: 0,
+      is_candidate: false,
+      is_role_model: false,
       date_of_birth: "",
       user_phone_number: "",
       user_designation: "",
       department: "",
-      salary: 0,
-      is_role_model: false,
-      is_candidate: false,
+      password: "",
       files: [],
     },
   });
@@ -73,15 +99,19 @@ const CompanySheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheetP
     if (id) {
       const response = await updateEmployee({
         id,
+        company_id: companyId,
         data: {
           ...data,
-          name: data.name ?? "",
-
-          files: data.files ?? [],
-          is_candidate: data.is_candidate ?? false,
-          salary: data.salary ?? 0,
           company_id: companyId,
-          email: data.email ?? "",
+          files: uploadedFiles,
+          password: "",
+          date_of_birth: data.date_of_birth || null,
+          user_phone_number: data.user_phone_number || null,
+          user_designation: data.user_designation || null,
+          department: data.department || null,
+          is_candidate: data.is_candidate || false,
+          is_role_model: data.is_role_model || false,
+          salary: Number(data.salary),
         },
       });
 
@@ -98,36 +128,41 @@ const CompanySheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheetP
       id: companyId,
       data: {
         ...data,
-        files: data.files ?? [],
-        is_candidate: data.is_candidate ?? false,
-        salary: data.salary ?? 0,
         company_id: companyId,
-        name: data.name ?? "",
-        email: data.email ?? "",
+        files: uploadedFiles,
+        date_of_birth: data.date_of_birth || null,
+        user_phone_number: data.user_phone_number || null,
+        user_designation: data.user_designation || null,
+        department: data.department || null,
+        is_candidate: data.is_candidate || false,
+        is_role_model: data.is_role_model || false,
+        salary: Number(data.salary),
       },
     });
 
-    if (response.data) {
+    if (response) {
       toast.success("Employee Created Successfully!");
     } else {
       toast.error("Something went wrong, Please try again!");
     }
-
     setOpen(false);
   };
 
   useEffect(() => {
     if (id && employee) {
-      form.setValue("name", employee.name ?? "");
-      form.setValue("email", employee.email ?? "");
-      form.setValue("salary", employee.salary ?? 0);
-      form.setValue("is_candidate", employee.is_candidate ?? false);
-      form.setValue("files", []);
-      form.setValue("date_of_birth", employee.date_of_birth ?? "");
-      form.setValue("user_phone_number", employee.user_phone_number ?? "");
-      form.setValue("department", employee.department ?? "");
-      form.setValue("user_designation", employee.user_designation ?? "");
-      form.setValue("is_role_model", employee.is_role_model ?? false);
+      form.reset({
+        name: employee.name,
+        email: employee.email,
+        salary: employee.salary,
+        is_candidate: employee.is_candidate,
+        is_role_model: employee.is_role_model,
+        date_of_birth: employee.date_of_birth || "",
+        user_phone_number: employee.user_phone_number || "",
+        user_designation: employee.user_designation || "",
+        department: employee.department || "",
+        password: "",
+        files: [],
+      });
     }
   }, [id, employee, form]);
 
@@ -135,43 +170,76 @@ const CompanySheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheetP
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>{id ? "Edit" : "Add"} Employee</SheetTitle>
-          <SheetDescription>{id ? "Update employee details" : "Add a new employee to your account"}</SheetDescription>
+          <SheetTitle>
+            {id ? "Edit" : "Add"}{" "}
+            {mode === "employees" ? " Candidate" : " Employee"}
+          </SheetTitle>
+          <SheetDescription>
+            {id
+              ? `Update ${
+                  mode === "employees" ? "candidate" : "employee"
+                } details`
+              : `Add a new ${
+                  mode === "employees" ? "candidate" : "employee"
+                } to your account`}
+          </SheetDescription>
         </SheetHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex h-full flex-col gap-5 overflow-auto px-4 pb-6">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col gap-5 px-4 pb-6 overflow-auto"
+          >
+            {/* Full Name */}
             <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    Full Name<span className="text-destructive">*</span>
-                  </FormLabel>
+                  <FormLabel>Full Name *</FormLabel>
                   <FormControl>
-                    <Input placeholder="DigiMark Developer" {...field} />
+                    <Input placeholder="John Doe" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
+            {/* Email */}
             <FormField
               control={form.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    Email<span className="text-destructive">*</span>
-                  </FormLabel>
+                  <FormLabel>Email *</FormLabel>
                   <FormControl>
-                    <Input type="email" placeholder="digimark@gmail.com" {...field} />
+                    <Input
+                      type="email"
+                      placeholder="employee@gmail.com"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
+            {/* Password */}
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input type="password" placeholder="********" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Date of Birth */}
             <FormField
               control={form.control}
               name="date_of_birth"
@@ -186,6 +254,7 @@ const CompanySheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheetP
               )}
             />
 
+            {/* Phone Number */}
             <FormField
               control={form.control}
               name="user_phone_number"
@@ -193,13 +262,18 @@ const CompanySheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheetP
                 <FormItem>
                   <FormLabel>Phone Number</FormLabel>
                   <FormControl>
-                    <Input type="tel" placeholder="+92 300 1234567" {...field} />
+                    <Input
+                      type="tel"
+                      placeholder="+92 300 1234567"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
+            {/* Department */}
             <FormField
               control={form.control}
               name="department"
@@ -207,13 +281,14 @@ const CompanySheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheetP
                 <FormItem>
                   <FormLabel>Department</FormLabel>
                   <FormControl>
-                    <Input type="text" placeholder="HR / IT / Marketing" {...field} />
+                    <Input placeholder="HR / IT / Marketing" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
+            {/* Designation */}
             <FormField
               control={form.control}
               name="user_designation"
@@ -221,26 +296,25 @@ const CompanySheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheetP
                 <FormItem>
                   <FormLabel>Designation</FormLabel>
                   <FormControl>
-                    <Input type="text" placeholder="Team Lead / Developer" {...field} />
+                    <Input placeholder="Developer / Team Lead" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
+            {/* Salary */}
             <FormField
               control={form.control}
               name="salary"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    Salary<span className="text-destructive">*</span>
-                  </FormLabel>
+                  <FormLabel>Salary *</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
-                      placeholder="0000"
-                      {...field}
+                      placeholder="50000"
+                      value={field.value}
                       onChange={(e) => field.onChange(Number(e.target.value))}
                     />
                   </FormControl>
@@ -248,55 +322,69 @@ const CompanySheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheetP
                 </FormItem>
               )}
             />
+
+            {/* Candidate Toggle */}
             <FormField
               control={form.control}
               name="is_candidate"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                  <div className="space-y-0.5">
-                    <FormLabel>Candidate</FormLabel>
-                  </div>
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                  <FormLabel>Is Candidate?</FormLabel>
                   <FormControl>
-                    <div className="flex w-full items-center justify-end gap-2">
-                      <span>No</span>
-                      <Switch checked={field.value} onCheckedChange={field.onChange} />
-                      <span>Yes</span>
-                    </div>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
+            {/* Role Model Toggle */}
+            <FormField
+              control={form.control}
+              name="is_role_model"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                  <FormLabel>Is Role Model?</FormLabel>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* File Upload */}
             <FormField
               control={form.control}
               name="files"
               render={() => (
                 <FormItem>
-                  <FormLabel>Employee Document</FormLabel>
+                  <FormLabel>Employee Documents</FormLabel>
                   <div
                     {...getRootProps()}
-                    className="flex w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-border border-dashed bg-muted/30 px-5 py-10 text-center transition hover:bg-muted/50"
+                    className="flex w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-border bg-muted/30 px-5 py-10 text-center hover:bg-muted/50 transition"
                   >
-                    <input
-                      {...getInputProps({
-                        onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-                          const file = e.target.files?.[0];
-                          if (file) {
-                            setUploadedFile(file);
-                            form.setValue("files", [file]);
-                          }
-                        },
-                      })}
-                    />
-
-                    {uploadedFile ? (
-                      <span className="font-medium text-base text-primary">{uploadedFile.name}</span>
+                    <input {...getInputProps()} />
+                    {uploadedFiles.length > 0 ? (
+                      uploadedFiles.map((file, i) => (
+                        <span key={i} className="text-primary font-medium">
+                          {file.name}
+                        </span>
+                      ))
                     ) : isDragActive ? (
-                      <span className="font-medium text-base">Drop the file here...</span>
+                      <span>Drop files here...</span>
                     ) : (
                       <>
-                        <span className="font-medium text-base">Drag & Drop your Employee PDF file here</span>
-                        <span className="text-muted-foreground text-sm">Only .pdf files are allowed</span>
+                        <span>Drag & Drop your PDF files here</span>
+                        <span className="text-sm text-muted-foreground">
+                          Only .pdf files are allowed
+                        </span>
                       </>
                     )}
                   </div>
@@ -304,20 +392,21 @@ const CompanySheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheetP
                 </FormItem>
               )}
             />
-            {isLoading || isLoadingUpdate ? (
-              <Button type="submit" variant="default" className="mt-auto flex items-center justify-center">
+
+            {/* Submit */}
+            <Button
+              type="submit"
+              className="mt-auto w-full"
+              disabled={isLoading || isLoadingUpdate}
+            >
+              {isLoading || isLoadingUpdate ? (
                 <Loader2 className="size-4 animate-spin" />
-              </Button>
-            ) : (
-              <Button
-                type="submit"
-                className="mt-auto w-full"
-                disabled={isLoading || isLoadingUpdate}
-                variant="default"
-              >
-                {id ? "Update Employee" : "Add Employee"}
-              </Button>
-            )}
+              ) : id ? (
+                "Update Employee"
+              ) : (
+                "Add Employee"
+              )}
+            </Button>
           </form>
         </Form>
       </SheetContent>
@@ -325,4 +414,4 @@ const CompanySheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheetP
   );
 };
 
-export default CompanySheet;
+export default EmployeeSheet;

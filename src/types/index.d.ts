@@ -1,6 +1,7 @@
 declare type GlobalState = {
   Company: string;
   token: string;
+   mode: "employees" | "candidates";
 };
 
 declare type PostLogin = {
@@ -19,7 +20,7 @@ declare type PostLoginResponse = {
 declare type CompanyInfo = {
   id: string;
   company_name: string;
-  email: string;
+  company_email: string;
   password?: string;
   owner_name: string;
   domain: string;
