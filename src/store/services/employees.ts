@@ -14,6 +14,7 @@ export const employees = api.injectEndpoints({
         const formData = new FormData();
         formData.append("name", data.name);
         formData.append("email", data.email);
+        formData.append("password", data.password ?? "");
         formData.append("salary", String(data.salary));
         formData.append("is_candidate", String(data.is_candidate ?? false));
         formData.append("is_role_model", String(data.is_role_model ?? false));
@@ -23,7 +24,6 @@ export const employees = api.injectEndpoints({
         if (data.user_phone_number) formData.append("user_phone_number", data.user_phone_number);
         if (data.user_designation) formData.append("user_designation", data.user_designation);
         if (data.department) formData.append("department", data.department);
-        if (data.password) formData.append("password", data.password);
 
         if (data.files && data.files.length > 0) {
           data.files.forEach((file: File) => {
@@ -44,6 +44,7 @@ export const employees = api.injectEndpoints({
         const formData = new FormData();
         formData.append("name", data.name);
         formData.append("email", data.email);
+        formData.append("password", data.password ?? "null");
         formData.append("salary", String(data.salary));
         formData.append("is_candidate", String(data.is_candidate ?? false));
         formData.append("is_role_model", String(data.is_role_model ?? false));
@@ -53,7 +54,7 @@ export const employees = api.injectEndpoints({
         if (data.user_phone_number) formData.append("user_phone_number", data.user_phone_number);
         if (data.user_designation) formData.append("user_designation", data.user_designation);
         if (data.department) formData.append("department", data.department);
-        if (data.password) formData.append("password", data.password);
+        // if (data.password) formData.append("password", data.password);
         if (data.files && data.files.length > 0) {
           data.files.forEach((file) => {
             formData.append("files", file);
@@ -68,7 +69,7 @@ export const employees = api.injectEndpoints({
       },
       transformResponse: (response: EmployeeResponse) => response,
     }),
-    getEmployee: build.query({
+    getEmployeebyId: build.query({
       query: ({ id, company_id }: { id: string; company_id: string }) => ({
         url: `/employees/company/${company_id}/${id}`,
         method: "GET",
@@ -89,5 +90,5 @@ export const {
   useDeleteEmployeeMutation,
   usePostEmployeeMutation,
   useUpdateEmployeeMutation,
-  useGetEmployeeQuery,
+  useGetEmployeebyIdQuery,
 } = employees;

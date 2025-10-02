@@ -26,7 +26,6 @@ declare type CompanyInfo = {
   owner_email: string;
   company_website: string;
   company_type: string;
-  company_size: string;
   phone_number: string;
   company_address: string;
   company_description: string;
@@ -51,6 +50,7 @@ declare type Employees = {
   company_id: string;
   name: string;
   email: string;
+  password: string | null;
   salary: number;
   is_candidate: boolean | null;
   is_role_model: boolean | null;
@@ -58,7 +58,6 @@ declare type Employees = {
   user_phone_number: string | null;
   user_designation: string | null;
   department: string | null;
-  password: string | null;
   files: File[] | null;
 };
 

@@ -61,7 +61,7 @@ const EmployeeSheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheet
       name: "",
       email: "",
       salary: 0,
-      is_candidate: false,
+      is_candidate: mode === "employees" ? false : true,
       is_role_model: false,
       date_of_birth: "",
       user_phone_number: "",
@@ -81,7 +81,7 @@ const EmployeeSheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheet
           ...data,
           company_id: companyId,
           files: uploadedFiles,
-          password: "",
+          password: data.password || null,
           date_of_birth: data.date_of_birth || null,
           user_phone_number: data.user_phone_number || null,
           user_designation: data.user_designation || null,
@@ -107,7 +107,7 @@ const EmployeeSheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheet
         ...data,
         company_id: companyId,
         files: uploadedFiles,
-        password: "",
+        password: data.password || null,
         date_of_birth: data.date_of_birth || null,
         user_phone_number: data.user_phone_number || null,
         user_designation: data.user_designation || null,
@@ -132,17 +132,17 @@ const EmployeeSheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheet
         name: employee.name,
         email: employee.email,
         salary: employee.salary,
-        is_candidate: employee.is_candidate,
+        password: employee.password || "",
+        is_candidate: employee.is_candidate ?? (mode === "employees" ? false : true),
         is_role_model: employee.is_role_model,
         date_of_birth: employee.date_of_birth || "",
         user_phone_number: employee.user_phone_number || "",
         user_designation: employee.user_designation || "",
         department: employee.department || "",
-        password: "",
         files: [],
       });
     }
-  }, [id, employee, form]);
+  }, [id, employee, form, mode]);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -304,19 +304,21 @@ const EmployeeSheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheet
             )}
 
             {/* Role Model Toggle */}
-            <FormField
-              control={form.control}
-              name="is_role_model"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                  <FormLabel>Is Role Model?</FormLabel>
-                  <FormControl>
-                    <Switch checked={field.value} onCheckedChange={field.onChange} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {mode === "candidates" && (
+              <FormField
+                control={form.control}
+                name="is_role_model"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                    <FormLabel>Is Role Model?</FormLabel>
+                    <FormControl>
+                      <Switch checked={field.value} onCheckedChange={field.onChange} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
             {/* File Upload */}
             <FormField

@@ -14,7 +14,6 @@ export const companies = api.injectEndpoints({
         formData.append("owner_email", data.owner_email || "");
         formData.append("company_website", data.company_website || "");
         formData.append("company_type", data.company_type || "");
-        formData.append("company_size", data.company_size || "");
         formData.append("phone_number", data.phone_number || "");
         formData.append("company_address", data.company_address || "");
         formData.append("company_description", data.company_description || "");
@@ -61,7 +60,6 @@ export const companies = api.injectEndpoints({
         formData.append("owner_name", data.owner_name || "");
         formData.append("company_website", data.company_website || "");
         formData.append("company_type", data.company_type || "");
-        formData.append("company_size", data.company_size || "");
         formData.append("phone_number", data.phone_number || "");
         formData.append("company_address", data.company_address || "");
         formData.append("company_description", data.company_description || "");

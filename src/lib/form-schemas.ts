@@ -8,13 +8,12 @@ export const companySchema = z.object({
 
   company_email: z.string().email("Invalid company email address"),
 
-  password: z.string().min(6, "Password must be at least 6 characters").optional(),
+  password: z.string().min(6, "Password must be at least 6 characters"),
 
   owner_name: z
     .string()
     .min(2, "Owner name must be at least 2 characters")
-    .regex(/^[A-Za-z\s]+$/, "Owner name must contain only alphabets")
-    .optional(),
+    .regex(/^[A-Za-z\s]+$/, "Owner name must contain only alphabets"),
 
   owner_email: z.string().email("Invalid owner email address"),
 
@@ -22,7 +21,7 @@ export const companySchema = z.object({
 
   company_type: z
     .string()
-    .min(2, "Company type must be at least 2 characters")
+    .min(2, "Company type must be contain value")
     .regex(/^[A-Za-z\s]+$/, "Company type must contain only alphabets")
     .optional(),
 
@@ -31,10 +30,10 @@ export const companySchema = z.object({
   phone_number: z
     .string()
     .min(10, "Phone number must be at least 10 digits")
-    .regex(/^[0-9]+$/, "Phone number must contain only numbers")
+    .regex(/^\+?[0-9]{1,4}[\s-]?(\([0-9]{1,4}\))?([\s-]?[0-9]{1,15})+$/, "Phone number must contain only numbers")
     .optional(),
 
-  company_address: z.string().min(5, "Company address must be at least 5 characters").optional(),
+  company_address: z.string().min(5, "Company address must be at least 5 characters"),
 
   company_description: z.string().min(10, "Description must be at least 10 characters").optional(),
 
@@ -56,10 +55,10 @@ export const employeesSchema = z.object({
   password: z
     .string()
     .min(6, "Password must be at least 6 characters")
-    .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
-      "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
-    )
+    // .regex(
+    //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
+    //   "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
+    // )
     .optional(),
 
   date_of_birth: z

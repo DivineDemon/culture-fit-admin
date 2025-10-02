@@ -106,11 +106,6 @@ const UserDetail = () => {
           </div>
 
           <div className="flex flex-col rounded-lg border p-4 shadow">
-            <p className="font-semibold text-base sm:text-lg">Company Size</p>
-            <p className="text-muted-foreground text-sm">{company?.company_size || "N/A"}</p>
-          </div>
-
-          <div className="flex flex-col rounded-lg border p-4 shadow">
             <p className="font-semibold text-base sm:text-lg">Company Type</p>
             <p className="text-muted-foreground text-sm">{company?.company_type || "N/A"}</p>
           </div>

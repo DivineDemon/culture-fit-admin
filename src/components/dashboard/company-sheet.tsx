@@ -23,7 +23,6 @@ interface CompanySheetProps {
     password?: string;
     owner_name?: string;
     owner_email?: string;
-    company_size?: string;
     company_type?: string;
     company_website?: string;
     phone_number?: string;
@@ -56,7 +55,6 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
           owner_email: data.owner_email ?? "",
           company_website: data.company_website ?? "",
           company_type: data.company_type ?? "",
-          company_size: data.company_size ?? "",
           phone_number: data.phone_number ?? "",
           company_address: data.company_address ?? "",
           company_description: data.company_description ?? "",
@@ -78,7 +76,6 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
       company_website: data.company_website ?? "",
       company_email: data.company_email ?? "",
       company_name: data.company_name ?? "",
-      company_size: data.company_size ?? "",
       company_type: data.company_type ?? "",
       owner_name: data.owner_name ?? "",
       owner_email: data.owner_email ?? "",
@@ -118,7 +115,6 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
       form.setValue("password", company.password ?? "");
       form.setValue("owner_name", company.owner_name ?? "");
       form.setValue("owner_email", company.owner_email ?? "");
-      form.setValue("company_size", company.company_size ?? "");
       form.setValue("company_type", company.company_type ?? "");
       form.setValue("company_website", company.company_website ?? "");
       form.setValue("phone_number", company.phone_number ?? "");
@@ -224,22 +220,6 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
 
             <FormField
               control={form.control}
-              name="company_size"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Company Size<span className="text-destructive">*</span>
-                  </FormLabel>
-                  <FormControl>
-                    <Input placeholder="1-10 employees" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
               name="company_type"
               render={({ field }) => (
                 <FormItem>
@@ -269,9 +249,7 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
               name="phone_number"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    Contact Number<span className="text-destructive">*</span>
-                  </FormLabel>
+                  <FormLabel>Contact Number</FormLabel>
                   <FormControl>
                     <Input placeholder="(123) 456-7890" {...field} />
                   </FormControl>
