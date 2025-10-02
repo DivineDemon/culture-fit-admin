@@ -1,16 +1,16 @@
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Logo from "@/assets/img/logo.jpg";
 import LogoBlack from "@/assets/img/logo-black.jpg";
+import { setMode } from "@/store/slices/global";
+import type { RootState } from "@/types/global";
 import MaxWidthWrapper from "./max-width-wrapper";
 import { ModeToggle } from "./mode-toggle";
 import { useTheme } from "./theme-provider";
 import { Button } from "./ui/button";
-import WarningModal from "./warning-modal";
-import { useDispatch, useSelector } from "react-redux";
-import type { RootState } from "@/types/global";
-import { setMode } from "@/store/slices/global";
 import { Switch } from "./ui/switch";
+import WarningModal from "./warning-modal";
 
 const Navbar = () => {
   const { theme } = useTheme();
@@ -19,8 +19,7 @@ const Navbar = () => {
   const [logout, setLogout] = useState<boolean>(false);
   const { mode } = useSelector((state: RootState) => state.global);
 
-
-   const toggleValidationMode = () => {
+  const toggleValidationMode = () => {
     if (mode === "employees") {
       dispatch(setMode("candidates"));
     } else {
@@ -39,17 +38,10 @@ const Navbar = () => {
             onClick={() => navigate("/dashboard")}
           />
           <div className="flex items-center justify-center gap-2.5">
-            <div className="flex items-center gap-2.5  justify-center pr-3">
-              <span className="text-muted-foreground text-xs font-medium">
-                Employees
-              </span>
-              <Switch
-                checked={mode === "employees"}
-                onCheckedChange={toggleValidationMode}
-              />
-              <span className="text-muted-foreground text-xs font-medium">
-                Candidates
-              </span>
+            <div className="flex items-center justify-center gap-2.5 pr-3">
+              <span className="font-medium text-muted-foreground text-xs">Employees</span>
+              <Switch checked={mode === "employees"} onCheckedChange={toggleValidationMode} />
+              <span className="font-medium text-muted-foreground text-xs">Candidates</span>
             </div>
             <Button size="sm" variant="destructive" onClick={() => setLogout(true)}>
               Logout

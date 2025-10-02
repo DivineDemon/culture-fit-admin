@@ -1,10 +1,5 @@
 import type { Column, Row } from "@tanstack/react-table";
-import {
-  ArrowDownAZ,
-  FilePenLine,
-  FileText,
-  MoreHorizontal,
-} from "lucide-react";
+import { ArrowDownAZ, FilePenLine, FileText, MoreHorizontal } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CompanySheet from "@/components/dashboard/company-sheet";
@@ -73,12 +68,7 @@ const ActionsCell = ({ row }: { row: Row<CompanyInfo> }) => {
         isLoading={isLoading}
         cta={handleDelete}
       /> */}
-      <CompanySheet
-        id={row.original.id}
-        open={open}
-        setOpen={setOpen}
-        company={row.original}
-      />
+      <CompanySheet id={row.original.id} open={open} setOpen={setOpen} company={row.original} />
     </>
   );
 };
@@ -88,46 +78,34 @@ export const useRowColumns = () => {
     {
       accessorKey: "company_name",
       header: ({ column }: { column: Column<CompanyInfo> }) => (
-        <Button
-          variant="ghost"
-          type="button"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+        <Button variant="ghost" type="button" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           Company Name
           <ArrowDownAZ className="ml-2" />
         </Button>
       ),
       cell: ({ row }: { row: Row<CompanyInfo> }) => (
-        <span className="ml-3 cursor-pointer font-medium">
-          {row.getValue("company_name") || "N/A"}
-        </span>
+        <span className="ml-3 cursor-pointer font-medium">{row.getValue("company_name") || "N/A"}</span>
       ),
     },
     {
       accessorKey: "company_email",
       header: "Email",
       cell: ({ row }: { row: Row<CompanyInfo> }) => (
-        <span className="font-semibold text-[#71717A] text-sm">
-          {row.getValue("company_email") || "N/A"}
-        </span>
+        <span className="font-semibold text-[#71717A] text-sm">{row.getValue("company_email") || "N/A"}</span>
       ),
     },
     {
       accessorKey: "company_address",
       header: "Address",
       cell: ({ row }: { row: Row<CompanyInfo> }) => (
-        <span className="font-semibold text-[#71717A] text-sm">
-          {row.getValue("company_address") || "N/A"}
-        </span>
+        <span className="font-semibold text-[#71717A] text-sm">{row.getValue("company_address") || "N/A"}</span>
       ),
     },
     {
       accessorKey: "company_description",
       header: "Description",
       cell: ({ row }: { row: Row<CompanyInfo> }) => (
-        <span className="font-semibold text-[#71717A] text-sm">
-          {row.getValue("company_description") || "N/A"}
-        </span>
+        <span className="font-semibold text-[#71717A] text-sm">{row.getValue("company_description") || "N/A"}</span>
       ),
     },
     {

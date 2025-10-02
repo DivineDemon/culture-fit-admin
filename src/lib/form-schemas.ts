@@ -16,6 +16,8 @@ export const companySchema = z.object({
     .regex(/^[A-Za-z\s]+$/, "Owner name must contain only alphabets")
     .optional(),
 
+  owner_email: z.string().email("Invalid owner email address"),
+
   company_size: z.string().optional(),
 
   company_type: z
@@ -24,7 +26,7 @@ export const companySchema = z.object({
     .regex(/^[A-Za-z\s]+$/, "Company type must contain only alphabets")
     .optional(),
 
-  domain: z.string().url("Invalid domain URL").optional(),
+  company_website: z.string().url("Invalid company_website URL").optional(),
 
   phone_number: z
     .string()
@@ -51,10 +53,14 @@ export const employeesSchema = z.object({
     .min(1, "Email is required")
     .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email format"),
 
-  password: z.string().min(6, "Password must be at least 6 characters").regex(
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
-    "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
-  ).optional(),
+  password: z
+    .string()
+    .min(6, "Password must be at least 6 characters")
+    .regex(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
+      "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
+    )
+    .optional(),
 
   date_of_birth: z
     .string()
@@ -69,7 +75,7 @@ export const employeesSchema = z.object({
   user_designation: z
     .string()
     .min(2, "Designation is required")
-    .regex(/^[a-zA-Z\s\-_\/]+$/, "Designation must only contain letters, spaces, -, /, or _")
+    .regex(/^[a-zA-Z\s\-_/]+$/, "Designation must only contain letters, spaces, -, /, or _")
     .optional(),
 
   department: z

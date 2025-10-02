@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
-import { type Dispatch, type SetStateAction, useState } from "react";
+import { type Dispatch, type SetStateAction, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -22,9 +22,10 @@ interface CompanySheetProps {
     company_email: string;
     password?: string;
     owner_name?: string;
+    owner_email?: string;
     company_size?: string;
     company_type?: string;
-    domain?: string;
+    company_website?: string;
     phone_number?: string;
     company_address?: string;
     company_description?: string;
@@ -34,26 +35,11 @@ interface CompanySheetProps {
 const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
   const [postCompany, { isLoading }] = usePostCompanyMutation();
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+
   const [updateCompany, { isLoading: isLoadingUpdate }] = useUpdateCompanyMutation();
 
   const form = useForm<z.infer<typeof companySchema>>({
     resolver: zodResolver(companySchema),
-    defaultValues: company
-      ? { ...company }
-      : {
-          company_name: "",
-          company_email: "",
-          password: "",
-          owner_name: "",
-          company_size: "",
-          company_type: "",
-          domain: "",
-          phone_number: "",
-          company_address: "",
-          company_description: "",
-          policy_document: "",
-          policy_file_name: "",
-        },
   });
 
   const onSubmit = async (data: z.infer<typeof companySchema>) => {
@@ -67,7 +53,8 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
           company_email: data.company_email ?? "",
           password: data.password ?? "",
           owner_name: data.owner_name ?? "",
-          domain: data.domain ?? "",
+          owner_email: data.owner_email ?? "",
+          company_website: data.company_website ?? "",
           company_type: data.company_type ?? "",
           company_size: data.company_size ?? "",
           phone_number: data.phone_number ?? "",
@@ -88,12 +75,13 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
 
     const response = await postCompany({
       ...data,
-      domain: data.domain ?? "",
+      company_website: data.company_website ?? "",
       company_email: data.company_email ?? "",
       company_name: data.company_name ?? "",
       company_size: data.company_size ?? "",
       company_type: data.company_type ?? "",
       owner_name: data.owner_name ?? "",
+      owner_email: data.owner_email ?? "",
       phone_number: data.phone_number ?? "",
       company_address: data.company_address ?? "",
       company_description: data.company_description ?? "",
@@ -102,7 +90,7 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
       policy_file_name: data.policy_file_name ?? "",
     });
 
-    if (response) {
+    if (response.data?.id) {
       toast.success("Company Created Successfully!");
     } else {
       toast.error("Something went wrong, Please try again!");
@@ -123,6 +111,27 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
     },
   });
 
+  useEffect(() => {
+    if (company) {
+      form.setValue("company_name", company.company_name);
+      form.setValue("company_email", company.company_email);
+      form.setValue("password", company.password ?? "");
+      form.setValue("owner_name", company.owner_name ?? "");
+      form.setValue("owner_email", company.owner_email ?? "");
+      form.setValue("company_size", company.company_size ?? "");
+      form.setValue("company_type", company.company_type ?? "");
+      form.setValue("company_website", company.company_website ?? "");
+      form.setValue("phone_number", company.phone_number ?? "");
+      form.setValue("company_address", company.company_address ?? "");
+      form.setValue("company_description", company.company_description ?? "");
+
+      if (uploadedFile) {
+        form.setValue("policy_document", uploadedFile.name);
+        form.setValue("policy_file_name", uploadedFile.name);
+      }
+    }
+  }, [company, form, uploadedFile]);
+
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetContent>
@@ -142,7 +151,7 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
                     Company Name<span className="text-destructive">*</span>
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder="DigiMark Developer" {...field} />
+                    <Input placeholder="xyz" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -158,7 +167,7 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
                     Email<span className="text-destructive">*</span>
                   </FormLabel>
                   <FormControl>
-                    <Input type="email" placeholder="digimark@gmail.com" {...field} />
+                    <Input type="email" placeholder="example@gmail.com" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -174,7 +183,7 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
                     Password<span className="text-destructive">*</span>
                   </FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="digi@123" {...field} />
+                    <Input type="password" placeholder="xyz@123" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -191,6 +200,22 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
                   </FormLabel>
                   <FormControl>
                     <Input placeholder="John Doe" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="owner_email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    Owner Email<span className="text-destructive">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Input type="email" placeholder="example@gmail.com" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -228,12 +253,12 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
             />
             <FormField
               control={form.control}
-              name="domain"
+              name="company_website"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Website</FormLabel>
                   <FormControl>
-                    <Input placeholder="www.digimark.com" {...field} />
+                    <Input placeholder="www.xyz.com" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

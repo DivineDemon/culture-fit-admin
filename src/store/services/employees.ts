@@ -19,12 +19,9 @@ export const employees = api.injectEndpoints({
         formData.append("is_role_model", String(data.is_role_model ?? false));
         formData.append("company_id", id);
 
-        if (data.date_of_birth)
-          formData.append("date_of_birth", data.date_of_birth);
-        if (data.user_phone_number)
-          formData.append("user_phone_number", data.user_phone_number);
-        if (data.user_designation)
-          formData.append("user_designation", data.user_designation);
+        if (data.date_of_birth) formData.append("date_of_birth", data.date_of_birth);
+        if (data.user_phone_number) formData.append("user_phone_number", data.user_phone_number);
+        if (data.user_designation) formData.append("user_designation", data.user_designation);
         if (data.department) formData.append("department", data.department);
         if (data.password) formData.append("password", data.password);
 
@@ -40,7 +37,7 @@ export const employees = api.injectEndpoints({
           body: formData,
         };
       },
-      transformResponse: (response: EmployeeResponse ) => response,
+      transformResponse: (response: EmployeeResponse) => response,
     }),
     updateEmployee: build.mutation<EmployeeResponse, { id: string; data: Employees; company_id: string }>({
       query: ({ id, data, company_id }) => {
@@ -69,7 +66,7 @@ export const employees = api.injectEndpoints({
           body: formData,
         };
       },
-      transformResponse: (response: EmployeeResponse ) => response,
+      transformResponse: (response: EmployeeResponse) => response,
     }),
     getEmployee: build.query({
       query: ({ id, company_id }: { id: string; company_id: string }) => ({

@@ -8,10 +8,11 @@ export const companies = api.injectEndpoints({
         const formData = new FormData();
 
         formData.append("company_name", data.company_name || "");
-        formData.append("email", data.email || "");
+        formData.append("company_email", data.company_email || "");
         if (data.password) formData.append("password", data.password);
         formData.append("owner_name", data.owner_name || "");
-        formData.append("domain", data.domain || "");
+        formData.append("owner_email", data.owner_email || "");
+        formData.append("company_website", data.company_website || "");
         formData.append("company_type", data.company_type || "");
         formData.append("company_size", data.company_size || "");
         formData.append("phone_number", data.phone_number || "");
@@ -41,7 +42,7 @@ export const companies = api.injectEndpoints({
         method: "GET",
       }),
       providesTags: ["companies"],
-      transformResponse: (response: { status_code:number ; message: string; data: CompanyInfo }) => response.data,
+      transformResponse: (response: { status_code: number; message: string; data: CompanyInfo }) => response.data,
     }),
     getCompany: build.query({
       query: (id: string) => ({
@@ -51,11 +52,34 @@ export const companies = api.injectEndpoints({
       transformResponse: (response: { status: string; message: string; data: CompanyInfo }) => response.data,
     }),
     updateCompany: build.mutation({
-      query: ({ id, data }: { id: string; data: CompanyInfo }) => ({
-        url: `/companies/${id}`,
-        method: "PUT",
-        body: data,
-      }),
+      query: ({ id, data }: { id: string; data: CompanyInfo }) => {
+        const formData = new FormData();
+
+        formData.append("company_name", data.company_name || "");
+        formData.append("company_email", data.company_email || "");
+        if (data.password) formData.append("password", data.password);
+        formData.append("owner_name", data.owner_name || "");
+        formData.append("company_website", data.company_website || "");
+        formData.append("company_type", data.company_type || "");
+        formData.append("company_size", data.company_size || "");
+        formData.append("phone_number", data.phone_number || "");
+        formData.append("company_address", data.company_address || "");
+        formData.append("company_description", data.company_description || "");
+
+        if (data.policy_document) {
+          formData.append("policy_document", data.policy_document);
+        }
+
+        if (data.policy_file_name) {
+          formData.append("policy_file_name", data.policy_file_name);
+        }
+
+        return {
+          url: `/companies/${id}/`,
+          method: "PUT",
+          body: formData,
+        };
+      },
       transformResponse: (response: { status: string; message: string; data: CompanyInfo }) => response.data,
       invalidatesTags: ["companies"],
     }),

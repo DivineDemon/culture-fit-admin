@@ -1,5 +1,6 @@
 import { Loader2, Upload, UserPlus } from "lucide-react";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 import EmployeeSheet from "@/components/company-detail/employee-add-sheet";
@@ -11,12 +12,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  useGetCompanyQuery,
-  usePostPolicyMutation,
-} from "@/store/services/company";
+import { useGetCompanyQuery, usePostPolicyMutation } from "@/store/services/company";
 import { useGetEmployeesQuery } from "@/store/services/employees";
-import { useSelector } from "react-redux";
 import type { RootState } from "@/types/global";
 
 const UserDetail = () => {
@@ -28,12 +25,9 @@ const UserDetail = () => {
   const [uploadOpen, setUploadOpen] = useState(false);
   const { mode } = useSelector((state: RootState) => state.global);
 
-  const { data: employee, isLoading: isLoadingEmployee } = useGetEmployeesQuery(
-    id,
-    {
-      refetchOnMountOrArgChange: true,
-    }
-  );
+  const { data: employee, isLoading: isLoadingEmployee } = useGetEmployeesQuery(id, {
+    refetchOnMountOrArgChange: true,
+  });
   const { data: company, isLoading } = useGetCompanyQuery(id ?? "");
   const [postPolicy, { isLoading: isUploading }] = usePostPolicyMutation();
 
@@ -69,39 +63,19 @@ const UserDetail = () => {
           {company?.company_name ?? "Company Not Found"}
         </Label>
         <div className="hidden flex-col gap-2.5 md:flex md:flex-row">
-          <Button
-            variant="default"
-            size="sm"
-            type="button"
-            onClick={() => setOpen(true)}
-          >
+          <Button variant="default" size="sm" type="button" onClick={() => setOpen(true)}>
             Add {mode === "employees" ? "Candidate" : "Employee"}
             <UserPlus className="ml-1 size-4" />
           </Button>
-          <Button
-            variant="default"
-            size="sm"
-            type="button"
-            onClick={() => setUploadOpen(true)}
-          >
+          <Button variant="default" size="sm" type="button" onClick={() => setUploadOpen(true)}>
             Upload Policy <Upload className="ml-1 size-4" />
           </Button>
         </div>
         <div className="flex gap-2.5 md:hidden">
-          <Button
-            variant="default"
-            size="sm"
-            type="button"
-            onClick={() => setOpen(true)}
-          >
+          <Button variant="default" size="sm" type="button" onClick={() => setOpen(true)}>
             <UserPlus className="ml-1 size-4" />
           </Button>
-          <Button
-            variant="default"
-            size="sm"
-            type="button"
-            onClick={() => setUploadOpen(true)}
-          >
+          <Button variant="default" size="sm" type="button" onClick={() => setUploadOpen(true)}>
             <Upload className="ml-1 size-4" />
           </Button>
         </div>
@@ -111,63 +85,49 @@ const UserDetail = () => {
         <CardContent className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div className="flex flex-col rounded-lg border p-4 shadow">
             <p className="font-semibold text-base sm:text-lg">Company Email</p>
-            <p className="text-muted-foreground text-sm">
-              {company?.company_email || "N/A"}
-            </p>
+            <p className="text-muted-foreground text-sm">{company?.company_email || "N/A"}</p>
           </div>
 
           <div className="flex flex-col rounded-lg border p-4 shadow">
             <p className="font-semibold text-base sm:text-lg">Owner Name</p>
-            <p className="text-muted-foreground text-sm">
-              {company?.owner_name || "N/A"}
-            </p>
+            <p className="text-muted-foreground text-sm">{company?.owner_name || "N/A"}</p>
           </div>
 
           <div className="flex flex-col rounded-lg border p-4 shadow">
             <p className="font-semibold text-base sm:text-lg">Website</p>
             <a
-              href={company?.domain || "N/A"}
+              href={company?.company_website || "N/A"}
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground text-sm underline"
             >
-              {company?.domain || "N/A"}
+              {company?.company_website || "N/A"}
             </a>
           </div>
 
           <div className="flex flex-col rounded-lg border p-4 shadow">
             <p className="font-semibold text-base sm:text-lg">Company Size</p>
-            <p className="text-muted-foreground text-sm">
-              {company?.company_size || "N/A"}
-            </p>
+            <p className="text-muted-foreground text-sm">{company?.company_size || "N/A"}</p>
           </div>
 
           <div className="flex flex-col rounded-lg border p-4 shadow">
             <p className="font-semibold text-base sm:text-lg">Company Type</p>
-            <p className="text-muted-foreground text-sm">
-              {company?.company_type || "N/A"}
-            </p>
+            <p className="text-muted-foreground text-sm">{company?.company_type || "N/A"}</p>
           </div>
 
           <div className="flex flex-col rounded-lg border p-4 shadow">
             <p className="font-semibold text-base sm:text-lg">Phone</p>
-            <p className="text-muted-foreground text-sm">
-              {company?.phone_number || "N/A"}
-            </p>
+            <p className="text-muted-foreground text-sm">{company?.phone_number || "N/A"}</p>
           </div>
 
           <div className="flex flex-col rounded-lg border p-4 shadow">
             <p className="font-semibold text-base sm:text-lg">Address</p>
-            <p className="text-muted-foreground text-sm">
-              {company?.company_address || "N/A"}
-            </p>
+            <p className="text-muted-foreground text-sm">{company?.company_address || "N/A"}</p>
           </div>
 
           <div className="col-span-1 flex flex-col rounded-lg border p-4 shadow sm:col-span-2 lg:col-span-4">
             <p className="font-semibold text-base sm:text-lg">Description</p>
-            <p className="w-full text-muted-foreground text-sm">
-              {company?.company_description || "N/A"}
-            </p>
+            <p className="w-full text-muted-foreground text-sm">{company?.company_description || "N/A"}</p>
           </div>
         </CardContent>
       </Card>
@@ -185,9 +145,7 @@ const UserDetail = () => {
             <Input
               type="text"
               className="w-full sm:w-1/2 lg:w-1/3"
-              placeholder={`Filter ${
-                mode === "employees" ? "Candidates" : "Employees"
-              } by Email...`}
+              placeholder={`Filter ${mode === "employees" ? "Candidates" : "Employees"} by Email...`}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -202,14 +160,9 @@ const UserDetail = () => {
               columns={columns}
               data={
                 employee
-                  ?.filter(
-                    (e: { email: string; is_candidate: boolean }) =>
-                      e.is_candidate === (mode === "employees")
-                  )
+                  ?.filter((e: { email: string; is_candidate: boolean }) => e.is_candidate === (mode === "employees"))
                   .filter((e: { email: string }) =>
-                    search
-                      ? e.email.toLowerCase().includes(search.toLowerCase())
-                      : true
+                    search ? e.email.toLowerCase().includes(search.toLowerCase()) : true,
                   ) || []
               }
             />

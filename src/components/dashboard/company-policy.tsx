@@ -1,19 +1,10 @@
-import {
-  CircleAlert,
-  Download,
-  FileText,
-  Loader2,
-  TriangleAlert,
-} from "lucide-react";
+import { CircleAlert, Download, FileText, Loader2, TriangleAlert } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  useGetPoliciesQuery,
-  useLazyDownloadPolicyQuery,
-} from "@/store/services/company";
-import { Button } from "../ui/button";
 import { truncateString } from "@/lib/utils";
+import { useGetPoliciesQuery, useLazyDownloadPolicyQuery } from "@/store/services/company";
+import { Button } from "../ui/button";
 
 const CulturePolicies = () => {
   const { id } = useParams<{ id: string }>();
@@ -65,34 +56,23 @@ const CulturePolicies = () => {
   return (
     <Card className="h-full w-full shadow-none">
       <CardHeader>
-        <CardTitle className="font-semibold text-primary text-xl">
-          Company Documents
-        </CardTitle>
+        <CardTitle className="font-semibold text-primary text-xl">Company Documents</CardTitle>
       </CardHeader>
       <CardContent className="h-[618px] space-y-4 overflow-y-scroll">
         <div className="flex flex-col items-start gap-2.5">
           {data && data.length > 0 ? (
             data.map((policy, idx: number) => (
-              <div
-                key={policy.id ?? idx}
-                className="flex w-full items-center justify-center gap-2.5 border-b pb-3"
-              >
+              <div key={policy.id ?? idx} className="flex w-full items-center justify-center gap-2.5 border-b pb-3">
                 <div className="size-10 rounded-full bg-primary p-2 text-white">
                   <FileText className="size-full" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-medium text-sm">
-                    {truncateString(policy.file_name, 35)}
-                  </h3>
+                  <h3 className="font-medium text-sm">{truncateString(policy.file_name, 35)}</h3>
                   <p className="text-muted-foreground text-xs">
                     {policy.description || "The policy about the company."}
                   </p>
                 </div>
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  onClick={() => handleDownload(policy.id, policy.file_name)}
-                >
+                <Button size="icon" variant="ghost" onClick={() => handleDownload(policy.id, policy.file_name)}>
                   <Download />
                 </Button>
               </div>

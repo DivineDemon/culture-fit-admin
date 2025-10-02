@@ -1,11 +1,7 @@
 import type { Column, Row } from "@tanstack/react-table";
-import {
-  ArrowDownAZ,
-  FilePenLine,
-  FileText,
-  MoreHorizontal,
-} from "lucide-react";
+import { ArrowDownAZ, FilePenLine, FileText, MoreHorizontal } from "lucide-react";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import EmployeeSheet from "@/components/company-detail/employee-add-sheet";
 import EmployeeDetailSheet from "@/components/company-detail/employee-detail-sheet";
 import { Button } from "@/components/ui/button";
@@ -15,7 +11,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useSelector } from "react-redux";
 import type { RootState } from "@/types/global";
 
 export type Employee = {
@@ -36,7 +31,6 @@ export type Employee = {
 };
 
 const ActionsCell = ({ row }: { row: Row<Employee> }) => {
-  
   const [open, setOpen] = useState<boolean>(false);
   const [detailOpen, setDetailOpen] = useState<boolean>(false);
   const { mode } = useSelector((state: RootState) => state.global);
@@ -118,12 +112,7 @@ const ActionsCell = ({ row }: { row: Row<Employee> }) => {
           }
         }
       />
-      <EmployeeDetailSheet
-        id={row.original.id}
-        open={detailOpen}
-        setOpen={setDetailOpen}
-        employee={row.original}
-      />
+      <EmployeeDetailSheet id={row.original.id} open={detailOpen} setOpen={setDetailOpen} employee={row.original} />
     </>
   );
 };
@@ -133,28 +122,20 @@ export const useEmployeeColumns = () => {
     {
       accessorKey: "name",
       header: ({ column }: { column: Column<Employee> }) => (
-        <Button
-          variant="ghost"
-          type="button"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+        <Button variant="ghost" type="button" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           Name
           <ArrowDownAZ className="ml-2" />
         </Button>
       ),
       cell: ({ row }: { row: Row<Employee> }) => (
-        <span className="ml-3 font-medium capitalize">
-          {row.getValue("name")}
-        </span>
+        <span className="ml-3 font-medium capitalize">{row.getValue("name")}</span>
       ),
     },
     {
       accessorKey: "email",
       header: "Email",
       cell: ({ row }: { row: Row<Employee> }) => (
-        <span className="font-semibold text-[#71717A] text-sm">
-          {row.getValue("email")}
-        </span>
+        <span className="font-semibold text-[#71717A] text-sm">{row.getValue("email")}</span>
       ),
     },
     {

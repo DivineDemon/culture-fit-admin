@@ -1,34 +1,18 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
-import { type Dispatch, type SetStateAction, useState, useEffect } from "react";
+import { type Dispatch, type SetStateAction, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
 import { toast } from "sonner";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
-import {
-  usePostEmployeeMutation,
-  useUpdateEmployeeMutation,
-} from "@/store/services/employees";
-import { useSelector } from "react-redux";
-import type { RootState } from "@/types/global";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { employeesSchema } from "@/lib/form-schemas";
+import { usePostEmployeeMutation, useUpdateEmployeeMutation } from "@/store/services/employees";
+import type { RootState } from "@/types/global";
 import { Switch } from "../ui/switch";
 
 interface EmployeeSheetProps {
@@ -54,16 +38,9 @@ interface EmployeeSheetProps {
   companyId: string;
 }
 
-const EmployeeSheet = ({
-  id,
-  open,
-  setOpen,
-  employee,
-  companyId,
-}: EmployeeSheetProps) => {
+const EmployeeSheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheetProps) => {
   const [postEmployee, { isLoading }] = usePostEmployeeMutation();
-  const [updateEmployee, { isLoading: isLoadingUpdate }] =
-    useUpdateEmployeeMutation();
+  const [updateEmployee, { isLoading: isLoadingUpdate }] = useUpdateEmployeeMutation();
   const { mode } = useSelector((state: RootState) => state.global);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
 
@@ -130,6 +107,7 @@ const EmployeeSheet = ({
         ...data,
         company_id: companyId,
         files: uploadedFiles,
+        password: "",
         date_of_birth: data.date_of_birth || null,
         user_phone_number: data.user_phone_number || null,
         user_designation: data.user_designation || null,
@@ -171,25 +149,18 @@ const EmployeeSheet = ({
       <SheetContent>
         <SheetHeader>
           <SheetTitle>
-            {id ? "Edit" : "Add"}{" "}
+            {id ? "Edit" : "Add"}
             {mode === "employees" ? " Candidate" : " Employee"}
           </SheetTitle>
           <SheetDescription>
             {id
-              ? `Update ${
-                  mode === "employees" ? "candidate" : "employee"
-                } details`
-              : `Add a new ${
-                  mode === "employees" ? "candidate" : "employee"
-                } to your account`}
+              ? `Update ${mode === "employees" ? "candidate" : "employee"} details`
+              : `Add a new ${mode === "employees" ? "candidate" : "employee"} to your account`}
           </SheetDescription>
         </SheetHeader>
 
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col gap-5 px-4 pb-6 overflow-auto"
-          >
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5 overflow-auto px-4 pb-6">
             {/* Full Name */}
             <FormField
               control={form.control}
@@ -213,11 +184,7 @@ const EmployeeSheet = ({
                 <FormItem>
                   <FormLabel>Email *</FormLabel>
                   <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="employee@gmail.com"
-                      {...field}
-                    />
+                    <Input type="email" placeholder="employee@gmail.com" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -262,11 +229,7 @@ const EmployeeSheet = ({
                 <FormItem>
                   <FormLabel>Phone Number</FormLabel>
                   <FormControl>
-                    <Input
-                      type="tel"
-                      placeholder="+92 300 1234567"
-                      {...field}
-                    />
+                    <Input type="tel" placeholder="+92 300 1234567" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -324,22 +287,21 @@ const EmployeeSheet = ({
             />
 
             {/* Candidate Toggle */}
-            <FormField
-              control={form.control}
-              name="is_candidate"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                  <FormLabel>Is Candidate?</FormLabel>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {mode === "employees" && (
+              <FormField
+                control={form.control}
+                name="is_candidate"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                    <FormLabel>Is Candidate?</FormLabel>
+                    <FormControl>
+                      <Switch checked={field.value} onCheckedChange={field.onChange} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
             {/* Role Model Toggle */}
             <FormField
@@ -349,10 +311,7 @@ const EmployeeSheet = ({
                 <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                   <FormLabel>Is Role Model?</FormLabel>
                   <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
+                    <Switch checked={field.value} onCheckedChange={field.onChange} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -368,12 +327,12 @@ const EmployeeSheet = ({
                   <FormLabel>Employee Documents</FormLabel>
                   <div
                     {...getRootProps()}
-                    className="flex w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-border bg-muted/30 px-5 py-10 text-center hover:bg-muted/50 transition"
+                    className="flex w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-border border-dashed bg-muted/30 px-5 py-10 text-center transition hover:bg-muted/50"
                   >
                     <input {...getInputProps()} />
                     {uploadedFiles.length > 0 ? (
                       uploadedFiles.map((file, i) => (
-                        <span key={i} className="text-primary font-medium">
+                        <span key={i} className="font-medium text-primary">
                           {file.name}
                         </span>
                       ))
@@ -382,9 +341,7 @@ const EmployeeSheet = ({
                     ) : (
                       <>
                         <span>Drag & Drop your PDF files here</span>
-                        <span className="text-sm text-muted-foreground">
-                          Only .pdf files are allowed
-                        </span>
+                        <span className="text-muted-foreground text-sm">Only .pdf files are allowed</span>
                       </>
                     )}
                   </div>
@@ -394,11 +351,7 @@ const EmployeeSheet = ({
             />
 
             {/* Submit */}
-            <Button
-              type="submit"
-              className="mt-auto w-full"
-              disabled={isLoading || isLoadingUpdate}
-            >
+            <Button type="submit" className="mt-auto w-full" disabled={isLoading || isLoadingUpdate}>
               {isLoading || isLoadingUpdate ? (
                 <Loader2 className="size-4 animate-spin" />
               ) : id ? (
