@@ -354,10 +354,10 @@ const EmployeeSheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheet
             <Button type="submit" className="mt-auto w-full" disabled={isLoading || isLoadingUpdate}>
               {isLoading || isLoadingUpdate ? (
                 <Loader2 className="size-4 animate-spin" />
-              ) : id ? (
-                "Update Employee"
               ) : (
-                "Add Employee"
+                <>
+                  {id ? "Edit" : "Add"} {mode === "employees" ? "Candidate" : "Employee"}
+                </>
               )}
             </Button>
           </form>
