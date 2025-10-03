@@ -1,69 +1,179 @@
+// import { Loader2 } from "lucide-react";
+// import { useState } from "react";
+// import { useNavigate } from "react-router-dom";
+// import { toast } from "sonner";
+// import { Button } from "@/components/ui/button";
+// import { Input } from "@/components/ui/input";
+// import { useLoginMutation } from "@/store/services/auth";
+
+// const Login = () => {
+//   const navigate = useNavigate();
+//   const [email, setEmail] = useState<string>("");
+//   const [login, { isLoading }] = useLoginMutation();
+//   const [password, setPassword] = useState<string>("");
+
+//   const handleLogin = async () => {
+//     if (email !== "digimark.dev1@gmail.com") {
+//       toast.error("Please use the Admin Credentials to login.");
+//       return;
+//     }
+
+//     const response = await login({
+//       email,
+//       password,
+//     });
+
+//     if (response.data) {
+//       toast.success("Logged In Successfully!");
+//       void navigate("/dashboard");
+//     } else {
+//       toast.error("Something went wrong, Please try again!");
+//     }
+//   };
+
+//   return (
+//     <form
+//       onSubmit={(e) => {
+//         e.preventDefault();
+//         void handleLogin();
+//       }}
+//       className="mx-auto flex w-[90%] flex-col items-center justify-center lg:w-2/3 xl:w-1/2"
+//     >
+//       <span className="w-full text-center font-bold text-[32px] leading-[32px] md:text-[48px] md:leading-[53px]">
+//         Welcome to
+//         <br /> Culture Fit
+//       </span>
+//       <span className="mt-2.5 mb-5 w-full text-center text-[#71717A] text-[14px] leading-[14px]">
+//         Enter your credentials to login.
+//       </span>
+//       <Input
+//         type="email"
+//         value={email}
+//         onChange={(e) => setEmail(e.target.value)}
+//         className="mt-5 mb-2.5 w-full p-5"
+//         placeholder="Enter your email"
+//       />
+//       <Input
+//         type="password"
+//         value={password}
+//         onChange={(e) => setPassword(e.target.value)}
+//         className="w-full p-5"
+//         placeholder="Enter your password"
+//       />
+//       <Button disabled={isLoading} className="mt-10 w-full" variant="default" size="lg">
+//         {isLoading ? <Loader2 className="animate-spin" /> : "Sign In with Email"}
+//       </Button>
+//     </form>
+//   );
+// };
+
+// export default Login;
+
+
+
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import type z from "zod";
 import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { loginSchema } from "@/lib/form-schemas"; 
 import { useLoginMutation } from "@/store/services/auth";
+import type { RootState } from "@/types/global";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState<string>("");
-  const [login, { isLoading }] = useLoginMutation();
-  const [password, setPassword] = useState<string>("");
 
-  const handleLogin = async () => {
-    if (email !== "digimark.dev1@gmail.com") {
+  const form = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const [login, { isLoading }] = useLoginMutation();
+  const { token } = useSelector((state: RootState) => state.global);
+
+  const onSubmit = async (data: z.infer<typeof loginSchema>) => {
+    // Optional: Restrict admin credentials like your old code
+    if (data.email !== "digimark.dev1@gmail.com") {
       toast.error("Please use the Admin Credentials to login.");
       return;
     }
 
-    const response = await login({
-      email,
-      password,
-    });
+    const response = await login(data);
 
     if (response.data) {
       toast.success("Logged In Successfully!");
-      void navigate("/dashboard");
+      navigate("/dashboard");
     } else {
       toast.error("Something went wrong, Please try again!");
     }
   };
 
+  useEffect(() => {
+    if (token) {
+      navigate("/dashboard");
+    }
+  }, [token, navigate]);
+
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        void handleLogin();
-      }}
-      className="mx-auto flex w-[90%] flex-col items-center justify-center lg:w-2/3 xl:w-1/2"
-    >
-      <span className="w-full text-center font-bold text-[32px] leading-[32px] md:text-[48px] md:leading-[53px]">
-        Welcome to
-        <br /> Culture Fit
-      </span>
-      <span className="mt-2.5 mb-5 w-full text-center text-[#71717A] text-[14px] leading-[14px]">
-        Enter your credentials to login.
-      </span>
-      <Input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        className="mt-5 mb-2.5 w-full p-5"
-        placeholder="Enter your email"
-      />
-      <Input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        className="w-full p-5"
-        placeholder="Enter your password"
-      />
-      <Button disabled={isLoading} className="mt-10 w-full" variant="default" size="lg">
-        {isLoading ? <Loader2 className="animate-spin" /> : "Sign In with Email"}
-      </Button>
-    </form>
+    <div className="mx-auto flex w-[90%] flex-col items-center justify-center lg:w-2/3 xl:w-1/2 gap-8">
+      <div className="flex w-full flex-col items-center justify-center gap-3">
+        <span className="w-full text-center font-bold text-[32px] leading-[32px] md:text-[48px] md:leading-[48px]">
+          Welcome to
+          <br /> Culture Fit
+        </span>
+        <span className="w-full text-center text-[#71717A] text-[14px] leading-[14px]">
+          Enter your credentials to login.
+        </span>
+      </div>
+
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex w-full flex-col gap-5">
+          {/* Email */}
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input type="email" placeholder="johndoe@example.com" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Password */}
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input type="password" placeholder="• • • • • • • •" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Submit */}
+          <Button type="submit" className="w-full" variant="default" size="lg" disabled={isLoading}>
+            {isLoading ? <Loader2 className="animate-spin" /> : "Sign In with Email"}
+          </Button>
+        </form>
+      </Form>
+    </div>
   );
 };
 

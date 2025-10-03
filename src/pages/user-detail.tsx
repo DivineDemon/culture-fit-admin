@@ -128,7 +128,7 @@ const UserDetail = () => {
       </Card>
 
       <div className="flex h-full flex-col gap-5 lg:grid lg:grid-cols-3">
-        <div className="order-2 lg:order-1">
+        <div className="order-1 lg:order-2">
           <CulturePolicies />
         </div>
 

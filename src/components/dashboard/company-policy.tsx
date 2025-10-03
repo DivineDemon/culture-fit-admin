@@ -36,7 +36,7 @@ const CulturePolicies = () => {
 
   if (isLoading) {
     return (
-      <div className="flex h-[618px] w-full items-center justify-center rounded-2xl border">
+      <div className="flex h-full w-full items-center justify-center rounded-2xl border lg:h-[618px]">
         <Loader2 className="size-8 animate-spin text-primary" />
       </div>
     );
@@ -44,7 +44,7 @@ const CulturePolicies = () => {
 
   if (error) {
     return (
-      <div className="flex h-[618px] w-full items-center justify-center rounded-2xl border">
+      <div className="flex h-full w-full items-center justify-center rounded-2xl border lg:h-[618px]">
         <p className="flex flex-col items-center justify-center gap-2.5 text-muted-foreground">
           <TriangleAlert className="size-8 text-destructive" />
           Something went wrong
@@ -58,7 +58,7 @@ const CulturePolicies = () => {
       <CardHeader>
         <CardTitle className="font-semibold text-primary text-xl">Company Documents</CardTitle>
       </CardHeader>
-      <CardContent className="h-[618px] space-y-4 overflow-y-scroll">
+      <CardContent className="h-full space-y-4 overflow-y-scroll lg:h-[618px]">
         <div className="flex flex-col items-start gap-2.5">
           {data && data.length > 0 ? (
             data.map((policy, idx: number) => (
@@ -67,7 +67,7 @@ const CulturePolicies = () => {
                   <FileText className="size-full" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-medium text-sm">{truncateString(policy.file_name, 35)}</h3>
+                  <h3 className="font-medium text-sm">{truncateString(policy.file_name, 20)}</h3>
                   <p className="text-muted-foreground text-xs">
                     {policy.description || "The policy about the company."}
                   </p>
@@ -78,7 +78,7 @@ const CulturePolicies = () => {
               </div>
             ))
           ) : (
-            <p className="flex h-[618px] w-full flex-col items-center justify-center text-muted-foreground">
+            <p className="flex h-full w-full flex-col items-center justify-center text-muted-foreground lg:h-[618px]">
               <CircleAlert className="size-8 text-pri" />
               No documents found.
             </p>

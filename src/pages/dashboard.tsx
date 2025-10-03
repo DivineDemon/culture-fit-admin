@@ -41,7 +41,7 @@ const Dashboard = () => {
         <div className="flex h-[calc(100vh-156px)] w-full flex-col gap-3.5 overflow-hidden">
           <Input
             type="text"
-            className="w-1/3"
+            className="w-2/3 md:w-1/3"
             placeholder="Filter Company by Email..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}

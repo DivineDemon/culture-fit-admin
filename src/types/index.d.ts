@@ -1,7 +1,7 @@
 declare type GlobalState = {
   Company: string;
   token: string;
-   mode: "employees" | "candidates";
+  mode: "employees" | "candidates";
 };
 
 declare type PostLogin = {
@@ -17,7 +17,13 @@ declare type PostLoginResponse = {
   };
 };
 
-declare type CompanyInfo = {
+export type CompanyFile = {
+  id: string;
+  file_name: string;
+  created_at: string;
+};
+
+export type CompanyInfo = {
   id: string;
   company_name: string;
   company_email: string;
@@ -29,8 +35,10 @@ declare type CompanyInfo = {
   phone_number: string;
   company_address: string;
   company_description: string;
-  policy_document: string;
-  policy_file_name: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+  files: CompanyFile[];
 };
 
 export type Policy = {

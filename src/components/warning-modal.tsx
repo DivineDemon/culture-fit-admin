@@ -1,4 +1,4 @@
-import { CircleAlert, LoaderCircle } from "lucide-react";
+import { Loader2, TriangleAlert } from "lucide-react";
 import type { Dispatch, ReactNode, SetStateAction } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
@@ -18,7 +18,7 @@ const WarningModal = ({ cta, open, text, title, setOpen, isLoading }: WarningMod
       <DialogContent className="sm:max-w-[425px]">
         <div className="flex flex-col items-center justify-center py-10">
           <div className="size-20 rounded-full bg-destructive/20 p-3">
-            <CircleAlert className="size-full text-destructive" />
+            <TriangleAlert className="size-full text-destructive" />
           </div>
           <span className="mt-7 mb-2.5 w-full text-center font-semibold text-[24px] leading-[24px] tracking-tight">
             {title}
@@ -42,7 +42,7 @@ const WarningModal = ({ cta, open, text, title, setOpen, isLoading }: WarningMod
             variant="destructive"
             className="cursor-pointer"
           >
-            {isLoading ? <LoaderCircle className="animate-spin" /> : "Confirm"}
+            {isLoading ? <Loader2 className="animate-spin" /> : "Confirm"}
           </Button>
         </DialogFooter>
       </DialogContent>

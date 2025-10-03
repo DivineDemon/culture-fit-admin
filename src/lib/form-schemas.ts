@@ -1,5 +1,10 @@
 import * as z from "zod";
 
+export const loginSchema = z.object({
+  email: z.email(),
+  password: z.string(),
+});
+
 export const companySchema = z.object({
   company_name: z
     .string()
@@ -37,8 +42,8 @@ export const companySchema = z.object({
 
   company_description: z.string().min(10, "Description must be at least 10 characters").optional(),
 
-  policy_document: z.string().optional(),
-  policy_file_name: z.string().optional(),
+  policy_document: z.instanceof(File).optional().nullable(),
+  policy_file_name: z.string().optional().nullable(),
 });
 
 export const employeesSchema = z.object({

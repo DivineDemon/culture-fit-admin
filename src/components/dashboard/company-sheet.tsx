@@ -12,6 +12,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "
 import { Textarea } from "@/components/ui/textarea";
 import { companySchema } from "@/lib/form-schemas";
 import { usePostCompanyMutation, useUpdateCompanyMutation } from "@/store/services/company";
+import type { CompanyFile } from "@/types";
 
 interface CompanySheetProps {
   id?: string;
@@ -28,6 +29,7 @@ interface CompanySheetProps {
     phone_number?: string;
     company_address?: string;
     company_description?: string;
+    files?: CompanyFile[];
   };
 }
 
@@ -58,8 +60,8 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
           phone_number: data.phone_number ?? "",
           company_address: data.company_address ?? "",
           company_description: data.company_description ?? "",
-          policy_document: data.policy_document ?? "",
-          policy_file_name: data.policy_file_name ?? "",
+          policy_document: uploadedFile ?? undefined, // File for backend
+          policy_file_name: data.policy_file_name ?? "", // Always send filename (old or new)
         },
       });
       if (response.data) {
@@ -83,8 +85,8 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
       company_address: data.company_address ?? "",
       company_description: data.company_description ?? "",
       password: data.password ?? "",
-      policy_document: data.policy_document ?? "",
-      policy_file_name: data.policy_file_name ?? "",
+      policy_document: uploadedFile ?? undefined, // ✅ send actual File
+      policy_file_name: uploadedFile?.name ?? undefined, // ✅ send file name
     });
 
     if (response.data?.id) {
@@ -96,37 +98,68 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
     setOpen(false);
   };
 
+  // const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  //   onDrop: (acceptedFiles) => {
+  //     if (acceptedFiles.length > 0) {
+  //       setUploadedFile(acceptedFiles[0]);
+  //     }
+  //   },
+  //   multiple: false,
+  //   accept: {
+  //     "application/pdf": [],
+  //   },
+  // });
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: (acceptedFiles) => {
       if (acceptedFiles.length > 0) {
-        setUploadedFile(acceptedFiles[0]);
+        const file = acceptedFiles[0];
+        setUploadedFile(file);
+        form.setValue("policy_document", file); // ✅ actual File
+        form.setValue("policy_file_name", file.name); // ✅ filename
       }
     },
     multiple: false,
-    accept: {
-      "application/pdf": [],
-    },
+    accept: { "application/pdf": [] },
   });
+
+  // useEffect(() => {
+  //   if (company) {
+  //     form.setValue("company_name", company.company_name);
+  //     form.setValue("company_email", company.company_email);
+  //     form.setValue("password", company.password ?? "");
+  //     form.setValue("owner_name", company.owner_name ?? "");
+  //     form.setValue("owner_email", company.owner_email ?? "");
+  //     form.setValue("company_type", company.company_type ?? "");
+  //     form.setValue("company_website", company.company_website ?? "");
+  //     form.setValue("phone_number", company.phone_number ?? "");
+  //     form.setValue("company_address", company.company_address ?? "");
+  //     form.setValue("company_description", company.company_description ?? "");
+
+  //     if (uploadedFile) {
+  //       form.setValue("policy_document", uploadedFile.name);
+  //       form.setValue("policy_file_name", uploadedFile.name);
+  //     }
+  //   }
+  // }, [company, form, uploadedFile]);
 
   useEffect(() => {
     if (company) {
-      form.setValue("company_name", company.company_name);
-      form.setValue("company_email", company.company_email);
-      form.setValue("password", company.password ?? "");
-      form.setValue("owner_name", company.owner_name ?? "");
-      form.setValue("owner_email", company.owner_email ?? "");
-      form.setValue("company_type", company.company_type ?? "");
-      form.setValue("company_website", company.company_website ?? "");
-      form.setValue("phone_number", company.phone_number ?? "");
-      form.setValue("company_address", company.company_address ?? "");
-      form.setValue("company_description", company.company_description ?? "");
-
-      if (uploadedFile) {
-        form.setValue("policy_document", uploadedFile.name);
-        form.setValue("policy_file_name", uploadedFile.name);
-      }
+      form.reset({
+        company_name: company.company_name,
+        company_email: company.company_email,
+        password: company.password ?? "",
+        owner_name: company.owner_name ?? "",
+        owner_email: company.owner_email ?? "",
+        company_type: company.company_type ?? "",
+        company_website: company.company_website ?? "",
+        phone_number: company.phone_number ?? "",
+        company_address: company.company_address ?? "",
+        company_description: company.company_description ?? "",
+        policy_file_name: company?.files?.[0]?.file_name ?? undefined,
+      });
     }
-  }, [company, form, uploadedFile]);
+  }, [company, form]);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -299,26 +332,33 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
                     className="flex w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-border border-dashed bg-muted/30 px-5 py-10 text-center transition hover:bg-muted/50"
                   >
                     <input
+                      className="hidden" // hide the native input, UI handled via drop area
                       {...getInputProps({
                         onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
                           const file = e.target.files?.[0];
                           if (file) {
                             setUploadedFile(file);
-                            form.setValue("policy_document", URL.createObjectURL(file));
-                            form.setValue("policy_file_name", file.name);
+                            form.setValue("policy_document", file); // ✅ File
+                            form.setValue("policy_file_name", file.name); // ✅ filename
                           }
                         },
                       })}
                     />
 
                     {uploadedFile ? (
-                      <span className="font-medium text-base text-primary">{uploadedFile.name}</span>
+                      <span className="max-w-[200px] truncate font-medium text-primary text-sm sm:max-w-[300px] sm:text-base">
+                        {uploadedFile.name}
+                      </span>
+                    ) : form.watch("policy_file_name") ? (
+                      <span className="max-w-[200px] truncate font-medium text-primary text-sm sm:max-w-[300px] sm:text-base">
+                        {form.watch("policy_file_name")}
+                      </span>
                     ) : isDragActive ? (
-                      <span className="font-medium text-base">Drop the file here...</span>
+                      <span className="font-medium text-sm sm:text-base">Drop the file here...</span>
                     ) : (
                       <>
-                        <span className="font-medium text-base">Drag & Drop your policy file here</span>
-                        <span className="text-muted-foreground text-sm">Only .pdf files are allowed</span>
+                        <span className="font-medium text-sm sm:text-base">Drag & Drop your policy file here</span>
+                        <span className="text-muted-foreground text-xs sm:text-sm">Only .pdf files are allowed</span>
                       </>
                     )}
                   </div>

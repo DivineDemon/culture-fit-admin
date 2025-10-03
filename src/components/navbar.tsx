@@ -1,9 +1,16 @@
+import { MoreVertical } from "lucide-react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Logo from "@/assets/img/logo.jpg";
 import LogoBlack from "@/assets/img/logo-black.jpg";
-import { setMode } from "@/store/slices/global";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { setMode, setToken } from "@/store/slices/global";
 import type { RootState } from "@/types/global";
 import MaxWidthWrapper from "./max-width-wrapper";
 import { ModeToggle } from "./mode-toggle";
@@ -11,12 +18,13 @@ import { useTheme } from "./theme-provider";
 import { Button } from "./ui/button";
 import { Switch } from "./ui/switch";
 import WarningModal from "./warning-modal";
+import { toast } from "sonner";
 
 const Navbar = () => {
   const { theme } = useTheme();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [logout, setLogout] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
   const { mode } = useSelector((state: RootState) => state.global);
 
   const toggleValidationMode = () => {
@@ -25,6 +33,14 @@ const Navbar = () => {
     } else {
       dispatch(setMode("employees"));
     }
+  };
+
+  const logout = () => {
+    dispatch(setToken(null));
+    dispatch(setMode(""));
+
+    navigate("/");
+    toast.success("Logged out successfully!");
   };
 
   return (
@@ -38,32 +54,72 @@ const Navbar = () => {
             onClick={() => navigate("/dashboard")}
           />
           <div className="flex items-center justify-center gap-2.5">
-            <div className="flex items-center justify-center gap-2.5 pr-3">
-              <span className="font-medium text-muted-foreground text-xs">Employees</span>
-              <Switch checked={mode === "employees"} onCheckedChange={toggleValidationMode} />
-              <span className="font-medium text-muted-foreground text-xs">Candidates</span>
+            {/* Desktop view */}
+            <div className="hidden items-center justify-center gap-2.5 sm:flex">
+              <div className="flex items-center justify-center gap-2.5 pr-3">
+                <span className="font-medium text-muted-foreground text-xs">
+                  Employees
+                </span>
+                <Switch
+                  checked={mode === "employees"}
+                  onCheckedChange={toggleValidationMode}
+                />
+                <span className="font-medium text-muted-foreground text-xs">
+                  Candidates
+                </span>
+              </div>
+              <Button
+                size="sm"
+                variant="destructive"
+                onClick={() => setOpen(true)}
+              >
+                Logout
+              </Button>
+              <ModeToggle />
             </div>
-            <Button size="sm" variant="destructive" onClick={() => setLogout(true)}>
-              Logout
-            </Button>
-            <ModeToggle />
+
+            <div className="sm:hidden">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="icon">
+                    <MoreVertical className="size-5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem asChild>
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium text-xs">Candidates</span>
+                      <Switch
+                        checked={mode === "employees"}
+                        onCheckedChange={toggleValidationMode}
+                      />
+                    </div>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Button
+                      size="sm"
+                      className="w-full"
+                      variant="destructive"
+                      onClick={() => setOpen(true)}
+                    >
+                      Logout
+                    </Button>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+            <span className="sm:hidden">
+              <ModeToggle />
+            </span>
           </div>
         </MaxWidthWrapper>
       </nav>
       <WarningModal
-        open={logout}
-        title="Are you Sure"
-        text={
-          <span>
-            You want to Logout? <br />
-            You can always log back in.
-          </span>
-        }
-        setOpen={setLogout}
-        cta={() => {
-          localStorage.clear();
-          void navigate("/");
-        }}
+        open={open}
+        title="Are you sure?"
+        text="You'll be signed out of your account."
+        setOpen={setOpen}
+        cta={logout}
       />
     </>
   );
