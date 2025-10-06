@@ -41,14 +41,14 @@ const UploadModal = ({ open, onClose, onUpload, isLoading }: UploadModalProps) =
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="md:max-w-lg">
         <DialogHeader>
           <DialogTitle className="font-semibold text-lg">Upload Company Policy Files</DialogTitle>
         </DialogHeader>
 
         <div
           {...getRootProps()}
-          className="flex w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-border border-dashed bg-muted/30 px-5 py-10 text-center transition hover:bg-muted/50"
+          className="flex w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-primary/80 border-dashed bg-muted/30 px-5 py-10 text-center transition hover:bg-muted/50"
         >
           <input {...getInputProps()} />
 
@@ -67,10 +67,7 @@ const UploadModal = ({ open, onClose, onUpload, isLoading }: UploadModalProps) =
             {uploadedFiles.map((file, index) => (
               <Badge key={index} className="flex items-center justify-between rounded-md border px-2 text-xs">
                 <span className="max-w-[75%] truncate">{file.name}</span>
-                <button
-                  onClick={() => handleRemoveFile(index)}
-                  className="text-muted-foreground hover:text-destructive"
-                >
+                <button onClick={() => handleRemoveFile(index)} className="text-muted hover:text-destructive">
                   <X className="size-4" />
                 </button>
               </Badge>

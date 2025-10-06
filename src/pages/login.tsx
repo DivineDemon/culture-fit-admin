@@ -69,8 +69,6 @@
 
 // export default Login;
 
-
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useEffect } from "react";
@@ -82,7 +80,7 @@ import type z from "zod";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { loginSchema } from "@/lib/form-schemas"; 
+import { loginSchema } from "@/lib/form-schemas";
 import { useLoginMutation } from "@/store/services/auth";
 import type { RootState } from "@/types/global";
 
@@ -124,7 +122,7 @@ const Login = () => {
   }, [token, navigate]);
 
   return (
-    <div className="mx-auto flex w-[90%] flex-col items-center justify-center lg:w-2/3 xl:w-1/2 gap-8">
+    <div className="mx-auto flex w-[90%] flex-col items-center justify-center gap-8 lg:w-2/3 xl:w-1/2">
       <div className="flex w-full flex-col items-center justify-center gap-3">
         <span className="w-full text-center font-bold text-[32px] leading-[32px] md:text-[48px] md:leading-[48px]">
           Welcome to

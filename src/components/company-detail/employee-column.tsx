@@ -142,7 +142,7 @@ export const useEmployeeColumns = () => {
       accessorKey: "user_designation",
       header: "Status",
       cell: ({ row }: { row: Row<Employee> }) => (
-        <span className="ml-3 font-semibold text-[#71717A] text-sm capitalize">
+        <span className="font-semibold text-[#71717A] text-sm capitalize">
           {row.original.is_candidate ? "Candidate" : "Employee"}
         </span>
       ),

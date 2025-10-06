@@ -12,6 +12,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import type { CompanyInfo } from "@/types";
 
+// import { useDeleteCompanyMutation } from "@/store/services/company";
+// import { toast } from "sonner";
+// import WarningModal from "../warning-modal";
+
 const ActionsCell = ({ row }: { row: Row<CompanyInfo> }) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState<boolean>(false);
@@ -55,7 +59,7 @@ const ActionsCell = ({ row }: { row: Row<CompanyInfo> }) => {
               setWarn(true);
             }}
           >
-            <Trash />
+            <Trash2 className="text-destructive" />
             <span className="ml-2 text-sm">Delete</span>
           </DropdownMenuItem> */}
         </DropdownMenuContent>

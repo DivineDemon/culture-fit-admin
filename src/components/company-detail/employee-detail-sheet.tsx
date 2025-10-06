@@ -15,7 +15,7 @@ const EmployeeDetailSheet = ({ open, setOpen, employee }: EmployeeDetailSheetPro
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <SheetContent className="w-full min-w-xl">
+      <SheetContent className="md:w-full lg:min-w-md">
         <SheetHeader>
           <SheetTitle className="font-semibold text-lg">Employee Details</SheetTitle>
           <SheetDescription>View all information about this employee</SheetDescription>
