@@ -24,7 +24,7 @@ export type CompanyFile = {
 };
 
 export type CompanyInfo = {
-  id: string;
+  id?: string;
   company_name: string;
   company_email: string;
   password?: string;
@@ -35,9 +35,6 @@ export type CompanyInfo = {
   phone_number: string;
   company_address: string;
   company_description: string;
-  is_active: boolean;
-  created_at: string;
-  updated_at: string;
   files: CompanyFile[];
 };
 

@@ -29,7 +29,7 @@ const UserDetail = () => {
     refetchOnMountOrArgChange: true,
   });
   const { data: company, isLoading } = useGetCompanyQuery(id ?? "");
-  const [postPolicy, { isLoading: isUploading }] = usePostPolicyMutation();
+  const [postPolicy] = usePostPolicyMutation();
 
   const handleUpload = async (files: File[]) => {
     if (!companyId) return;
@@ -166,11 +166,13 @@ const UserDetail = () => {
       </div>
 
       <EmployeeSheet open={open} setOpen={setOpen} companyId={companyId} />
+
       <UploadModal
         open={uploadOpen}
         onClose={() => setUploadOpen(false)}
         onUpload={handleUpload}
-        isLoading={isUploading}
+        companyId={id ?? ""}
+        // employeeId={id!}
       />
     </div>
   );

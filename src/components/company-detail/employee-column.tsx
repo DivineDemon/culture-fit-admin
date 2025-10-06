@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { RootState } from "@/types/global";
+import { Badge } from "../ui/badge";
 
 export type Employee = {
   id: string;
@@ -146,6 +147,18 @@ export const useEmployeeColumns = () => {
           {row.original.is_candidate ? "Candidate" : "Employee"}
         </span>
       ),
+    },
+    {
+      accessorKey: "is_role_model",
+      header: "Role Model",
+      cell: ({ row }: { row: Row<Employee> }) => {
+        const isRoleModel = row.getValue("is_role_model");
+        return (
+          <Badge variant="outline" className="w-1/2 px-3">
+            {isRoleModel ? "Yes" : "- -"}
+          </Badge>
+        );
+      },
     },
     {
       id: "actions",

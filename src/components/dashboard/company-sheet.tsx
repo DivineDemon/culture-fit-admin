@@ -60,8 +60,15 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
           phone_number: data.phone_number ?? "",
           company_address: data.company_address ?? "",
           company_description: data.company_description ?? "",
-          policy_document: uploadedFile ?? undefined, // File for backend
-          policy_file_name: data.policy_file_name ?? "", // Always send filename (old or new)
+          files: uploadedFile
+            ? [
+                {
+                  file_name: uploadedFile.name,
+                  id: "",
+                  created_at: new Date().toISOString(),
+                },
+              ]
+            : [],
         },
       });
       if (response.data) {
@@ -85,8 +92,15 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
       company_address: data.company_address ?? "",
       company_description: data.company_description ?? "",
       password: data.password ?? "",
-      policy_document: uploadedFile ?? undefined, // ✅ send actual File
-      policy_file_name: uploadedFile?.name ?? undefined, // ✅ send file name
+      files: uploadedFile
+        ? [
+            {
+              file_name: uploadedFile.name,
+              id: "",
+              created_at: new Date().toISOString(),
+            },
+          ]
+        : [],
     });
 
     if (response.data?.id) {
