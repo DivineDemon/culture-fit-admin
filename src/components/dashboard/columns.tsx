@@ -10,7 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { CompanyInfo } from "@/types";
+import { truncateString } from "@/lib/utils";
 
 // import { useDeleteCompanyMutation } from "@/store/services/company";
 // import { toast } from "sonner";
@@ -95,21 +95,27 @@ export const useRowColumns = () => {
       accessorKey: "company_email",
       header: "Email",
       cell: ({ row }: { row: Row<CompanyInfo> }) => (
-        <span className="font-semibold text-[#71717A] text-sm">{row.getValue("company_email") || "N/A"}</span>
+        <span className="font-semibold text-[#71717A] text-sm">
+          {truncateString(row.getValue("company_email"), 25) || "N/A"}
+        </span>
       ),
     },
     {
       accessorKey: "company_address",
       header: "Address",
       cell: ({ row }: { row: Row<CompanyInfo> }) => (
-        <span className="font-semibold text-[#71717A] text-sm">{row.getValue("company_address") || "N/A"}</span>
+        <span className="font-semibold text-[#71717A] text-sm">
+          {truncateString(row.getValue("company_address"), 30) || "N/A"}
+        </span>
       ),
     },
     {
       accessorKey: "company_description",
       header: "Description",
       cell: ({ row }: { row: Row<CompanyInfo> }) => (
-        <span className="font-semibold text-[#71717A] text-sm">{row.getValue("company_description") || "N/A"}</span>
+        <span className="font-semibold text-[#71717A] text-sm">
+          {truncateString(row.getValue("company_description"), 50) || "N/A"}
+        </span>
       ),
     },
     {

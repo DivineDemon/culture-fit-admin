@@ -1,7 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { type Dispatch, type SetStateAction, useEffect, useState } from "react";
-import { useDropzone } from "react-dropzone";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { toast } from "sonner";
@@ -13,6 +12,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "
 import { employeesSchema } from "@/lib/form-schemas";
 import { usePostEmployeeMutation, useUpdateEmployeeMutation } from "@/store/services/employees";
 import type { RootState } from "@/types/global";
+import UploadModal from "../file-uploader";
 import { Switch } from "../ui/switch";
 
 interface EmployeeSheetProps {
@@ -41,19 +41,14 @@ interface EmployeeSheetProps {
 const EmployeeSheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheetProps) => {
   const [postEmployee, { isLoading }] = usePostEmployeeMutation();
   const [updateEmployee, { isLoading: isLoadingUpdate }] = useUpdateEmployeeMutation();
-  const { mode } = useSelector((state: RootState) => state.global);
+  const mode = useSelector((state: RootState) => state.global.mode);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop: (acceptedFiles) => {
-      if (acceptedFiles.length > 0) {
-        setUploadedFiles(acceptedFiles);
-        form.setValue("files", acceptedFiles);
-      }
-    },
-    multiple: true,
-    accept: { "application/pdf": [] },
-  });
+  const handleUpload = (files: File[]) => {
+    setUploadedFiles(files);
+    form.setValue("files", files);
+  };
 
   const form = useForm<z.infer<typeof employeesSchema>>({
     resolver: zodResolver(employeesSchema),
@@ -161,13 +156,14 @@ const EmployeeSheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheet
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5 overflow-auto px-4 pb-6">
-            {/* Full Name */}
             <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Full Name *</FormLabel>
+                  <FormLabel>
+                    Full Name <span className="text-destructive">*</span>
+                  </FormLabel>
                   <FormControl>
                     <Input placeholder="John Doe" {...field} />
                   </FormControl>
@@ -176,13 +172,14 @@ const EmployeeSheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheet
               )}
             />
 
-            {/* Email */}
             <FormField
               control={form.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email *</FormLabel>
+                  <FormLabel>
+                    Email <span className="text-destructive">*</span>
+                  </FormLabel>
                   <FormControl>
                     <Input type="email" placeholder="employee@gmail.com" {...field} />
                   </FormControl>
@@ -191,7 +188,6 @@ const EmployeeSheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheet
               )}
             />
 
-            {/* Password */}
             <FormField
               control={form.control}
               name="password"
@@ -206,7 +202,6 @@ const EmployeeSheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheet
               )}
             />
 
-            {/* Date of Birth */}
             <FormField
               control={form.control}
               name="date_of_birth"
@@ -221,7 +216,6 @@ const EmployeeSheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheet
               )}
             />
 
-            {/* Phone Number */}
             <FormField
               control={form.control}
               name="user_phone_number"
@@ -236,7 +230,6 @@ const EmployeeSheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheet
               )}
             />
 
-            {/* Department */}
             <FormField
               control={form.control}
               name="department"
@@ -251,7 +244,6 @@ const EmployeeSheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheet
               )}
             />
 
-            {/* Designation */}
             <FormField
               control={form.control}
               name="user_designation"
@@ -266,13 +258,14 @@ const EmployeeSheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheet
               )}
             />
 
-            {/* Salary */}
             <FormField
               control={form.control}
               name="salary"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Salary *</FormLabel>
+                  <FormLabel>
+                    Salary <span className="text-destructive">*</span>
+                  </FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -286,7 +279,6 @@ const EmployeeSheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheet
               )}
             />
 
-            {/* Candidate Toggle */}
             {mode === "employees" && (
               <FormField
                 control={form.control}
@@ -303,7 +295,6 @@ const EmployeeSheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheet
               />
             )}
 
-            {/* Role Model Toggle */}
             {mode === "candidates" && (
               <FormField
                 control={form.control}
@@ -320,39 +311,6 @@ const EmployeeSheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheet
               />
             )}
 
-            {/* File Upload */}
-            <FormField
-              control={form.control}
-              name="files"
-              render={() => (
-                <FormItem>
-                  <FormLabel>Employee Documents</FormLabel>
-                  <div
-                    {...getRootProps()}
-                    className="flex w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-border border-dashed bg-muted/30 px-5 py-10 text-center transition hover:bg-muted/50"
-                  >
-                    <input {...getInputProps()} />
-                    {uploadedFiles.length > 0 ? (
-                      uploadedFiles.map((file, i) => (
-                        <span key={i} className="font-medium text-primary">
-                          {file.name}
-                        </span>
-                      ))
-                    ) : isDragActive ? (
-                      <span>Drop files here...</span>
-                    ) : (
-                      <>
-                        <span>Drag & Drop your PDF files here</span>
-                        <span className="text-muted-foreground text-sm">Only .pdf files are allowed</span>
-                      </>
-                    )}
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Submit */}
             <Button type="submit" className="mt-auto w-full" disabled={isLoading || isLoadingUpdate}>
               {isLoading || isLoadingUpdate ? (
                 <Loader2 className="size-4 animate-spin" />
@@ -363,6 +321,13 @@ const EmployeeSheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheet
               )}
             </Button>
           </form>
+          <UploadModal
+            open={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            onUpload={handleUpload}
+            companyId={companyId}
+            employeeId={id || ""}
+          />
         </Form>
       </SheetContent>
     </Sheet>

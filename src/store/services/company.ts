@@ -1,4 +1,3 @@
-import type { CompanyInfo, Policy } from "@/types";
 import { api } from "./core";
 
 export const companies = api.injectEndpoints({
@@ -40,10 +39,10 @@ export const companies = api.injectEndpoints({
     }),
 
     postPolicy: build.mutation({
-      query: ({ id, formData }: { id: string; formData: FormData }) => ({
+      query: ({ id, data }: { id: string; data: CompanyFile }) => ({
         url: `/companies/${id}/files`,
         method: "POST",
-        body: formData,
+        body: data,
       }),
       invalidatesTags: ["policies"],
     }),

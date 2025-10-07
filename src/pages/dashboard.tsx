@@ -6,7 +6,6 @@ import { DataTable } from "@/components/data-table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useGetCompaniesQuery } from "@/store/services/company";
-import type { CompanyInfo } from "@/types";
 
 const Dashboard = () => {
   const columns = useRowColumns();

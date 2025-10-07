@@ -2,7 +2,7 @@ export interface WebhookRequest {
   report_type: "company_doc" | "resume";
   file_content: string;
   company_id?: string;
-  file_name: string;
+  file_name?: string;
   employee_id?: string;
 }
 
@@ -23,8 +23,8 @@ export interface WebhookResponse {
 
 export const callWebhook = async (
   file_content: string,
-  company_id: string,
-  file_name: string,
+  company_id?: string,
+  file_name?: string,
   employee_id?: string,
 ): Promise<WebhookResponse> => {
   const webhookUrl = import.meta.env.VITE_WEBHOOK_URL;
@@ -33,8 +33,17 @@ export const callWebhook = async (
     throw new Error("Webhook URL not configured");
   }
 
+  let report_type: "company_doc" | "resume";
+  if (company_id) {
+    report_type = "company_doc";
+  } else if (employee_id) {
+    report_type = "resume";
+  } else {
+    throw new Error("Either company_id or employee_id must be provided");
+  }
+
   const requestBody: WebhookRequest = {
-    report_type: "company_doc",
+    report_type,
     file_content,
     company_id,
     file_name,

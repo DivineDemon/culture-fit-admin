@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import type { GlobalState } from "@/types";
 
 const initialState: GlobalState = {
   Company: "",

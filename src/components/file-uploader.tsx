@@ -1,22 +1,22 @@
 import { X } from "lucide-react";
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
+import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { callWebhook } from "@/lib/api";
 import { extractTextFromPDF } from "@/lib/utils";
-import { toast } from "sonner";
 
 interface UploadModalProps {
   open: boolean;
   onClose: () => void;
   onUpload: (files: File[]) => void;
-  companyId: string;
-  // employeeId: string;
+  companyId?: string;
+  employeeId?: string;
 }
 
-const UploadModal = ({ open, onClose, onUpload, companyId }: UploadModalProps) => {
+const UploadModal = ({ open, onClose, onUpload, companyId, employeeId }: UploadModalProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
 
@@ -38,7 +38,9 @@ const UploadModal = ({ open, onClose, onUpload, companyId }: UploadModalProps) =
 
   const handleUpload = async () => {
     if (!uploadedFiles.length) return;
-    if (!companyId) {
+
+    if (!companyId && !employeeId) {
+      toast.error("Please provide company or employee ID");
       return;
     }
 
@@ -47,20 +49,21 @@ const UploadModal = ({ open, onClose, onUpload, companyId }: UploadModalProps) =
     try {
       for (const file of uploadedFiles) {
         const content = await extractTextFromPDF(file);
-        const response = await callWebhook(content, companyId, file.name);
 
-        if (!response.success) {
-          toast.success("File Upload Successfully");
+        const response = await callWebhook(content, companyId, file.name, employeeId);
+
+        if (response.success) {
+          toast.success("File uploaded successfully");
         } else {
-          toast.error("Something want wrong, Please try again!");
+          toast.error(response.error || "Something went wrong, please try again!");
         }
       }
 
-      setUploadedFiles([]);
       onUpload(uploadedFiles);
+      setUploadedFiles([]);
       onClose();
     } catch (_error) {
-      toast.error("Something want worng, Please try again!");
+      toast.error("Something went wrong, please try again!");
     } finally {
       setIsLoading(false);
     }
@@ -70,7 +73,7 @@ const UploadModal = ({ open, onClose, onUpload, companyId }: UploadModalProps) =
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle className="font-semibold text-lg">Upload Company Policy Files {companyId}</DialogTitle>
+          <DialogTitle className="font-semibold text-lg">Upload Files</DialogTitle>
         </DialogHeader>
 
         <div

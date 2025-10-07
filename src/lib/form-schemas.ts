@@ -41,9 +41,6 @@ export const companySchema = z.object({
   company_address: z.string().min(5, "Company address must be at least 5 characters"),
 
   company_description: z.string().min(10, "Description must be at least 10 characters").optional(),
-
-  policy_document: z.instanceof(File).optional().nullable(),
-  policy_file_name: z.string().optional().nullable(),
 });
 
 export const employeesSchema = z.object({

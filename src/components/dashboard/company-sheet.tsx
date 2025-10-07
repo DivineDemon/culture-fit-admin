@@ -1,7 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
-import { type Dispatch, type SetStateAction, useEffect, useState } from "react";
-import { useDropzone } from "react-dropzone";
+import { type Dispatch, type SetStateAction, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
@@ -12,7 +11,6 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "
 import { Textarea } from "@/components/ui/textarea";
 import { companySchema } from "@/lib/form-schemas";
 import { usePostCompanyMutation, useUpdateCompanyMutation } from "@/store/services/company";
-import type { CompanyFile } from "@/types";
 
 interface CompanySheetProps {
   id?: string;
@@ -29,14 +27,11 @@ interface CompanySheetProps {
     phone_number?: string;
     company_address?: string;
     company_description?: string;
-    files?: CompanyFile[];
   };
 }
 
 const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
   const [postCompany, { isLoading }] = usePostCompanyMutation();
-  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-
   const [updateCompany, { isLoading: isLoadingUpdate }] = useUpdateCompanyMutation();
 
   const form = useForm<z.infer<typeof companySchema>>({
@@ -60,15 +55,6 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
           phone_number: data.phone_number ?? "",
           company_address: data.company_address ?? "",
           company_description: data.company_description ?? "",
-          files: uploadedFile
-            ? [
-                {
-                  file_name: uploadedFile.name,
-                  id: "",
-                  created_at: new Date().toISOString(),
-                },
-              ]
-            : [],
         },
       });
       if (response.data) {
@@ -92,15 +78,6 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
       company_address: data.company_address ?? "",
       company_description: data.company_description ?? "",
       password: data.password ?? "",
-      files: uploadedFile
-        ? [
-            {
-              file_name: uploadedFile.name,
-              id: "",
-              created_at: new Date().toISOString(),
-            },
-          ]
-        : [],
     });
 
     if (response.data?.id) {
@@ -123,19 +100,6 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
   //     "application/pdf": [],
   //   },
   // });
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop: (acceptedFiles) => {
-      if (acceptedFiles.length > 0) {
-        const file = acceptedFiles[0];
-        setUploadedFile(file);
-        form.setValue("policy_document", file); // ✅ actual File
-        form.setValue("policy_file_name", file.name); // ✅ filename
-      }
-    },
-    multiple: false,
-    accept: { "application/pdf": [] },
-  });
 
   // useEffect(() => {
   //   if (company) {
@@ -170,7 +134,6 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
         phone_number: company.phone_number ?? "",
         company_address: company.company_address ?? "",
         company_description: company.company_description ?? "",
-        policy_file_name: company?.files?.[0]?.file_name ?? undefined,
       });
     }
   }, [company, form]);
@@ -330,52 +293,6 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
                   <FormControl>
                     <Textarea placeholder="Enter company description" className="h-36 resize-none" {...field} />
                   </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="policy_document"
-              render={() => (
-                <FormItem>
-                  <FormLabel>Company Policy Document</FormLabel>
-                  <div
-                    {...getRootProps()}
-                    className="flex w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-border border-dashed bg-muted/30 px-5 py-10 text-center transition hover:bg-muted/50"
-                  >
-                    <input
-                      className="hidden" // hide the native input, UI handled via drop area
-                      {...getInputProps({
-                        onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-                          const file = e.target.files?.[0];
-                          if (file) {
-                            setUploadedFile(file);
-                            form.setValue("policy_document", file); // ✅ File
-                            form.setValue("policy_file_name", file.name); // ✅ filename
-                          }
-                        },
-                      })}
-                    />
-
-                    {uploadedFile ? (
-                      <span className="max-w-[200px] truncate font-medium text-primary text-sm sm:max-w-[300px] sm:text-base">
-                        {uploadedFile.name}
-                      </span>
-                    ) : form.watch("policy_file_name") ? (
-                      <span className="max-w-[200px] truncate font-medium text-primary text-sm sm:max-w-[300px] sm:text-base">
-                        {form.watch("policy_file_name")}
-                      </span>
-                    ) : isDragActive ? (
-                      <span className="font-medium text-sm sm:text-base">Drop the file here...</span>
-                    ) : (
-                      <>
-                        <span className="font-medium text-sm sm:text-base">Drag & Drop your policy file here</span>
-                        <span className="text-muted-foreground text-xs sm:text-sm">Only .pdf files are allowed</span>
-                      </>
-                    )}
-                  </div>
                   <FormMessage />
                 </FormItem>
               )}

@@ -1,5 +1,5 @@
 import type { Column, Row } from "@tanstack/react-table";
-import { ArrowDownAZ, FilePenLine, FileText, MoreHorizontal } from "lucide-react";
+import { ArrowDownAZ, FilePenLine, FileText, MoreHorizontal, Upload } from "lucide-react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import EmployeeSheet from "@/components/company-detail/employee-add-sheet";
@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { RootState } from "@/types/global";
+import UploadModal from "../file-uploader";
 import { Badge } from "../ui/badge";
 
 export type Employee = {
@@ -34,6 +35,7 @@ export type Employee = {
 const ActionsCell = ({ row }: { row: Row<Employee> }) => {
   const [open, setOpen] = useState<boolean>(false);
   const [detailOpen, setDetailOpen] = useState<boolean>(false);
+  const [uploadOpen, setUploadOpen] = useState<boolean>(false);
   const { mode } = useSelector((state: RootState) => state.global);
   // const [warn, setWarn] = useState<boolean>(false);
   // const [deleteEmployee, { isLoading }] = useDeleteEmployeeMutation();
@@ -68,6 +70,10 @@ const ActionsCell = ({ row }: { row: Row<Employee> }) => {
           <DropdownMenuItem onClick={() => setDetailOpen(true)}>
             <FileText />
             <span className="ml-2 text-sm">View Details</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setUploadOpen(true)}>
+            <Upload />
+            <span className="ml-2 text-sm">Upload File</span>
           </DropdownMenuItem>
           {/* <DropdownMenuItem
             onClick={() => {
@@ -114,6 +120,13 @@ const ActionsCell = ({ row }: { row: Row<Employee> }) => {
         }
       />
       <EmployeeDetailSheet id={row.original.id} open={detailOpen} setOpen={setDetailOpen} employee={row.original} />
+
+      <UploadModal
+        open={uploadOpen}
+        onClose={() => setUploadOpen(false)}
+        onUpload={() => setUploadOpen(false)}
+        employeeId={row.original.id}
+      />
     </>
   );
 };
@@ -130,6 +143,13 @@ export const useEmployeeColumns = () => {
       ),
       cell: ({ row }: { row: Row<Employee> }) => (
         <span className="ml-3 font-medium capitalize">{row.getValue("name")}</span>
+      ),
+    },
+    {
+      accessorKey: "id",
+      header: "ID",
+      cell: ({ row }: { row: Row<Employee> }) => (
+        <span className="font-semibold text-[#71717A] text-sm">{row.getValue("id")}</span>
       ),
     },
     {

@@ -17,13 +17,7 @@ declare type PostLoginResponse = {
   };
 };
 
-export type CompanyFile = {
-  id: string;
-  file_name: string;
-  created_at: string;
-};
-
-export type CompanyInfo = {
+declare type CompanyInfo = {
   id?: string;
   company_name: string;
   company_email: string;
@@ -35,10 +29,9 @@ export type CompanyInfo = {
   phone_number: string;
   company_address: string;
   company_description: string;
-  files: CompanyFile[];
 };
 
-export type Policy = {
+declare type Policy = {
   id: string;
   company_id: string;
   file_name: string;
@@ -49,6 +42,13 @@ export type Policy = {
 declare type EmployeeFile = {
   id: string;
   file_name: string;
+  file_data: string;
+};
+
+declare type CompanyFile = {
+  id: string;
+  file_name: string;
+  file_data: string;
 };
 
 declare type Employees = {

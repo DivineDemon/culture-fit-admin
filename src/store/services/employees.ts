@@ -1,4 +1,3 @@
-import type { EmployeeResponse, Employees } from "@/types";
 import { api } from "./core";
 
 export const employees = api.injectEndpoints({
@@ -37,6 +36,14 @@ export const employees = api.injectEndpoints({
       providesTags: ["employees"],
       transformResponse: (response: EmployeeResponse) => response,
     }),
+    getEmployeeFile: build.query<EmployeeFile[], { id: string; company_id: string }>({
+      query: ({ id, company_id }) => ({
+        url: `/employees/company/${company_id}/${id}/files`,
+        method: "GET",
+      }),
+      providesTags: ["employees"],
+      transformResponse: (response: { status_code: number; message: string; data: EmployeeFile[] }) => response.data,
+    }),
     deleteEmployee: build.mutation({
       query: ({ id, employeeId }: { id: string; employeeId: string }) => ({
         url: `/employees/company/${id}/${employeeId}`,
@@ -53,4 +60,5 @@ export const {
   usePostEmployeeMutation,
   useUpdateEmployeeMutation,
   useGetEmployeebyIdQuery,
+  useGetEmployeeFileQuery,
 } = employees;
