@@ -2,7 +2,6 @@ import { Loader2, Upload, UserPlus } from "lucide-react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { toast } from "sonner";
 import EmployeeSheet from "@/components/company-detail/employee-add-sheet";
 import { useEmployeeColumns } from "@/components/company-detail/employee-column";
 import CulturePolicies from "@/components/dashboard/company-policy";
@@ -12,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useGetCompanyQuery, usePostPolicyMutation } from "@/store/services/company";
+import { useGetCompanyQuery } from "@/store/services/company";
 import { useGetEmployeesQuery } from "@/store/services/employees";
 import type { RootState } from "@/types/global";
 
@@ -23,37 +22,16 @@ const UserDetail = () => {
   const companyId = id ?? "";
   const [search, setSearch] = useState<string>("");
   const [uploadOpen, setUploadOpen] = useState(false);
-  const { mode } = useSelector((state: RootState) => state.global);
+  const mode = useSelector((state: RootState) => state.global.mode);
 
   const { data: employee, isLoading: isLoadingEmployee } = useGetEmployeesQuery(id, {
     refetchOnMountOrArgChange: true,
   });
   const { data: company, isLoading } = useGetCompanyQuery(id ?? "");
-  const [postPolicy] = usePostPolicyMutation();
 
   const handleUpload = async (files: File[]) => {
+    if (!files.length) return;
     if (!companyId) return;
-
-    try {
-      const response = await postPolicy({
-        id: companyId,
-        data: {
-          file_data: files[0].name,
-          file_name: files[0].name,
-          id: companyId,
-        },
-      });
-
-      if ("data" in response && response.data?.status_code === 200) {
-        toast.success("Files uploaded successfully");
-      } else {
-        toast.error("Failed to upload files");
-      }
-
-      setUploadOpen(false);
-    } catch (_err) {
-      toast.error("Failed to upload files");
-    }
   };
 
   if (isLoading) {
