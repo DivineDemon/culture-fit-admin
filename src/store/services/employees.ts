@@ -8,7 +8,7 @@ export const employees = api.injectEndpoints({
         method: "GET",
       }),
       providesTags: ["employees"],
-      transformResponse: (response: EmployeeResponse) => response,
+      transformResponse: (response: EmployeeResponse[]) => response,
     }),
     postEmployee: build.mutation({
       query: ({ id, data }: { id: string; data: Employees }) => ({

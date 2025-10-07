@@ -19,22 +19,7 @@ interface EmployeeSheetProps {
   id?: string;
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  employee?: {
-    id: string;
-    company_id: string;
-    user_id: string;
-    name: string;
-    email: string;
-    password: string | null;
-    date_of_birth: string;
-    user_phone_number: string;
-    user_designation: string;
-    department: string;
-    salary: number;
-    is_role_model: boolean;
-    is_candidate: boolean;
-    files: string[];
-  };
+  employee?: EmployeeResponse;
   companyId: string;
 }
 

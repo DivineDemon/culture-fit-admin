@@ -1,6 +1,5 @@
 import { Loader2 } from "lucide-react";
 import { type Dispatch, type SetStateAction } from "react";
-import type { Employee } from "@/components/company-detail/employee-column";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useGetEmployeebyIdQuery } from "@/store/services/employees";
 import { Label } from "../ui/label";
@@ -10,7 +9,7 @@ interface EmployeeDetailSheetProps {
   id?: string;
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  employee?: Employee;
+  employee?: EmployeeResponse;
 }
 
 const EmployeeDetailSheet = ({ open, setOpen, employee }: EmployeeDetailSheetProps) => {

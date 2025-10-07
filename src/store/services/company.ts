@@ -37,7 +37,6 @@ export const companies = api.injectEndpoints({
       transformResponse: (response: { status: string; message: string; data: CompanyInfo }) => response.data,
       invalidatesTags: ["companies"],
     }),
-
     postPolicy: build.mutation({
       query: ({ id, data }: { id: string; data: CompanyFile }) => ({
         url: `/companies/${id}/files`,
