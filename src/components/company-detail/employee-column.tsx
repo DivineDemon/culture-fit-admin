@@ -78,13 +78,6 @@ export const useEmployeeColumns = () => {
       ),
     },
     {
-      accessorKey: "id",
-      header: "ID",
-      cell: ({ row }: { row: Row<EmployeeResponse> }) => (
-        <span className="font-semibold text-[#71717A] text-sm">{row.getValue("id")}</span>
-      ),
-    },
-    {
       accessorKey: "email",
       header: "Email",
       cell: ({ row }: { row: Row<EmployeeResponse> }) => (
