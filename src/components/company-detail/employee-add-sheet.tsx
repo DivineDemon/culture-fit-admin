@@ -41,7 +41,7 @@ const EmployeeSheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheet
       name: "",
       email: "",
       salary: 0,
-      is_candidate: mode === "employees" ? true : false,
+      is_candidate: mode === "employees" ? false : true,
       is_role_model: false,
       date_of_birth: "",
       user_phone_number: "",
