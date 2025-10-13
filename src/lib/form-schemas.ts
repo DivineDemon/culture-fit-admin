@@ -54,14 +54,7 @@ export const employeesSchema = z.object({
     .min(1, "Email is required")
     .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email format"),
 
-  password: z
-    .string()
-    .min(6, "Password must be at least 6 characters")
-    // .regex(
-    //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
-    //   "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
-    // )
-    .optional(),
+  password: z.string().min(6, "Password must be at least 6 characters").optional(),
 
   date_of_birth: z
     .string()

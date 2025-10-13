@@ -32,15 +32,15 @@ const ActionsCell = ({ row }: { row: Row<EmployeeResponse> }) => {
         <DropdownMenuContent align="end">
           <DropdownMenuItem onClick={() => setOpen(true)}>
             <FilePenLine />
-            <span className="ml-2 text-sm">Edit {mode === "employees" ? "Employee" : "Candidate"}</span>
+            Edit {mode === "employees" ? "Employee" : "Candidate"}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setDetailOpen(true)}>
             <FileText />
-            <span className="ml-2 text-sm">View Details</span>
+            View Details
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setUploadOpen(true)}>
             <Upload />
-            <span className="ml-2 text-sm">Upload File</span>
+            Upload File
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

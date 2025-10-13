@@ -89,38 +89,6 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
     setOpen(false);
   };
 
-  // const { getRootProps, getInputProps, isDragActive } = useDropzone({
-  //   onDrop: (acceptedFiles) => {
-  //     if (acceptedFiles.length > 0) {
-  //       setUploadedFile(acceptedFiles[0]);
-  //     }
-  //   },
-  //   multiple: false,
-  //   accept: {
-  //     "application/pdf": [],
-  //   },
-  // });
-
-  // useEffect(() => {
-  //   if (company) {
-  //     form.setValue("company_name", company.company_name);
-  //     form.setValue("company_email", company.company_email);
-  //     form.setValue("password", company.password ?? "");
-  //     form.setValue("owner_name", company.owner_name ?? "");
-  //     form.setValue("owner_email", company.owner_email ?? "");
-  //     form.setValue("company_type", company.company_type ?? "");
-  //     form.setValue("company_website", company.company_website ?? "");
-  //     form.setValue("phone_number", company.phone_number ?? "");
-  //     form.setValue("company_address", company.company_address ?? "");
-  //     form.setValue("company_description", company.company_description ?? "");
-
-  //     if (uploadedFile) {
-  //       form.setValue("policy_document", uploadedFile.name);
-  //       form.setValue("policy_file_name", uploadedFile.name);
-  //     }
-  //   }
-  // }, [company, form, uploadedFile]);
-
   useEffect(() => {
     if (company) {
       form.reset({
@@ -163,7 +131,6 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="company_email"
@@ -179,7 +146,6 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="password"
@@ -195,7 +161,6 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="owner_name"
@@ -211,7 +176,6 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="owner_email"
@@ -227,7 +191,6 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="company_type"
@@ -267,7 +230,6 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="company_address"
@@ -283,7 +245,6 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="company_description"
@@ -297,7 +258,6 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
                 </FormItem>
               )}
             />
-
             {isLoading || isLoadingUpdate ? (
               <Button type="submit" variant="default" className="flex items-center justify-center">
                 <Loader2 className="size-4 animate-spin" />

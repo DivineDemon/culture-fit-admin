@@ -137,39 +137,104 @@
   display: none;
 }
 
-/* Markdown preview dark mode table fixes */
 .markdown-content table {
-  border-collapse: collapse;
-  width: 100%;
-  margin: 1rem 0;
+  border-collapse: collapse !important;
+  width: 100% !important;
+  margin: 1rem 0 !important;
 }
 
 .markdown-content table th,
 .markdown-content table td {
-  border: 1px solid hsl(var(--border));
-  padding: 0.5rem;
+  border: 1px solid hsl(var(--border)) !important;
+  padding: 0.5rem !important;
+  color: hsl(var(--foreground)) !important;
 }
 
 .markdown-content table th {
-  background-color: hsl(var(--muted));
-  font-weight: 600;
+  background-color: hsl(var(--muted)) !important;
+  font-weight: 600 !important;
+  color: hsl(var(--foreground)) !important;
 }
 
 .markdown-content table tr:nth-child(even) {
-  background-color: hsl(var(--muted) / 0.3);
+  background-color: hsl(var(--muted) / 0.3) !important;
 }
 
-/* Dark mode specific table styles */
 [data-color-mode="dark"] .markdown-content table th,
 [data-color-mode="dark"] .markdown-content table td {
-  color: hsl(var(--foreground));
-  border-color: hsl(var(--border));
+  color: hsl(var(--foreground)) !important;
+  border-color: hsl(var(--border)) !important;
+  background-color: transparent !important;
 }
 
 [data-color-mode="dark"] .markdown-content table th {
-  background-color: hsl(var(--muted));
+  background-color: hsl(var(--muted)) !important;
+  color: hsl(var(--foreground)) !important;
 }
 
 [data-color-mode="dark"] .markdown-content table tr:nth-child(even) {
-  background-color: hsl(var(--muted) / 0.3);
+  background-color: hsl(var(--muted) / 0.3) !important;
+}
+
+.wmde-markdown table {
+  border-collapse: collapse !important;
+  width: 100% !important;
+  margin: 1rem 0 !important;
+}
+
+.wmde-markdown table th,
+.wmde-markdown table td {
+  border: 1px solid hsl(var(--border)) !important;
+  padding: 0.5rem !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+.wmde-markdown table th {
+  background-color: hsl(var(--muted)) !important;
+  font-weight: 600 !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+.wmde-markdown table tr:nth-child(even) {
+  background-color: hsl(var(--muted) / 0.3) !important;
+}
+
+[data-color-mode="dark"] .wmde-markdown table th,
+[data-color-mode="dark"] .wmde-markdown table td {
+  color: hsl(var(--foreground)) !important;
+  border-color: hsl(var(--border)) !important;
+  background-color: transparent !important;
+}
+
+[data-color-mode="dark"] .wmde-markdown table th {
+  background-color: hsl(var(--muted)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+[data-color-mode="dark"] .wmde-markdown table tr:nth-child(even) {
+  background-color: hsl(var(--muted) / 0.3) !important;
+}
+
+[data-color-mode="dark"] .wmde-markdown {
+  color: hsl(var(--foreground)) !important;
+}
+
+[data-color-mode="dark"] .wmde-markdown * {
+  color: inherit !important;
+}
+
+[data-color-mode="dark"] .wmde-markdown table,
+[data-color-mode="dark"] .wmde-markdown table * {
+  color: hsl(var(--foreground)) !important;
+}
+
+[data-color-mode="dark"] .wmde-markdown table th,
+[data-color-mode="dark"] .wmde-markdown table td,
+[data-color-mode="dark"] .wmde-markdown table tr {
+  background-color: transparent !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+[data-color-mode="dark"] .wmde-markdown table th {
+  background-color: hsl(var(--muted)) !important;
 }
