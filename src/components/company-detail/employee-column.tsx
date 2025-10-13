@@ -12,9 +12,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { RootState } from "@/types/global";
-
+import UploadModal from "../file-uploader";
 import { Badge } from "../ui/badge";
-import UploadReport from "../upload-report";
 
 const ActionsCell = ({ row }: { row: Row<EmployeeResponse> }) => {
   const [open, setOpen] = useState<boolean>(false);
@@ -53,11 +52,11 @@ const ActionsCell = ({ row }: { row: Row<EmployeeResponse> }) => {
         employee={row.original}
       />
       <EmployeeDetailSheet id={row.original.id} open={detailOpen} setOpen={setDetailOpen} employee={row.original} />
-      <UploadReport
+      <UploadModal
         open={uploadOpen}
         onClose={() => setUploadOpen(false)}
         onUpload={() => setUploadOpen(false)}
-        employeeId={row.original.user_id ?? ""}
+        employeeId={row.original.id}
         companyId={row.original.company_id}
       />
     </>
