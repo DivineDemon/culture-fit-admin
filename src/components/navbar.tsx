@@ -54,19 +54,17 @@ const Navbar = () => {
             onClick={() => navigate("/dashboard")}
           />
           <div className="flex items-center justify-center gap-2.5">
-            {/* Desktop view */}
             <div className="hidden items-center justify-center gap-2.5 sm:flex">
               <div className="flex items-center justify-center gap-2.5 pr-3">
-                <span className="font-medium text-muted-foreground text-xs">Employees</span>
-                <Switch checked={mode === "employees"} onCheckedChange={toggleValidationMode} />
                 <span className="font-medium text-muted-foreground text-xs">Candidates</span>
+                <Switch checked={mode === "employees"} onCheckedChange={toggleValidationMode} />
+                <span className="font-medium text-muted-foreground text-xs">Employees</span>
               </div>
               <Button size="sm" variant="destructive" onClick={() => setOpen(true)}>
                 Logout
               </Button>
               <ModeToggle />
             </div>
-
             <div className="sm:hidden">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>

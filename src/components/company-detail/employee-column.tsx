@@ -32,7 +32,7 @@ const ActionsCell = ({ row }: { row: Row<EmployeeResponse> }) => {
         <DropdownMenuContent align="end">
           <DropdownMenuItem onClick={() => setOpen(true)}>
             <FilePenLine />
-            <span className="ml-2 text-sm">Edit {mode === "employees" ? "Candidate" : "Employee"}</span>
+            <span className="ml-2 text-sm">Edit {mode === "employees" ? "Employee" : "Candidate"}</span>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setDetailOpen(true)}>
             <FileText />

@@ -24,11 +24,11 @@ interface EmployeeSheetProps {
 }
 
 const EmployeeSheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheetProps) => {
-  const [postEmployee, { isLoading }] = usePostEmployeeMutation();
-  const [updateEmployee, { isLoading: isLoadingUpdate }] = useUpdateEmployeeMutation();
-  const mode = useSelector((state: RootState) => state.global.mode);
-  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [postEmployee, { isLoading }] = usePostEmployeeMutation();
+  const { mode } = useSelector((state: RootState) => state.global);
+  const [updateEmployee, { isLoading: isLoadingUpdate }] = useUpdateEmployeeMutation();
 
   const handleUpload = (files: File[]) => {
     setUploadedFiles(files);
@@ -113,7 +113,7 @@ const EmployeeSheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheet
         email: employee.email,
         salary: employee.salary,
         password: employee.password || "",
-        is_candidate: employee.is_candidate ?? (mode === "employees" ? true : false),
+        is_candidate: employee.is_candidate ?? (mode === "employees" ? false : true),
         is_role_model: employee.is_role_model,
         date_of_birth: employee.date_of_birth || "",
         user_phone_number: employee.user_phone_number || "",
@@ -130,15 +130,14 @@ const EmployeeSheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheet
         <SheetHeader>
           <SheetTitle>
             {id ? "Edit" : "Add"}
-            {mode === "employees" ? " Candidate" : " Employee"}
+            {mode === "employees" ? " Employee" : " Candidate"}
           </SheetTitle>
           <SheetDescription>
             {id
-              ? `Update ${mode === "employees" ? "candidate" : "employee"} details`
-              : `Add a new ${mode === "employees" ? "candidate" : "employee"} to your account`}
+              ? `Update ${mode === "employees" ? "employee" : "candidate"} details`
+              : `Add a new ${mode === "employees" ? "employee" : "candidate"} to your account`}
           </SheetDescription>
         </SheetHeader>
-
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5 overflow-auto px-4 pb-6">
             <FormField
@@ -156,7 +155,6 @@ const EmployeeSheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheet
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="email"
@@ -172,7 +170,6 @@ const EmployeeSheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheet
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="password"
@@ -186,7 +183,6 @@ const EmployeeSheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheet
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="date_of_birth"
@@ -200,7 +196,6 @@ const EmployeeSheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheet
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="user_phone_number"
@@ -214,7 +209,6 @@ const EmployeeSheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheet
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="department"
@@ -228,7 +222,6 @@ const EmployeeSheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheet
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="user_designation"
@@ -242,7 +235,6 @@ const EmployeeSheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheet
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="salary"
@@ -263,24 +255,7 @@ const EmployeeSheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheet
                 </FormItem>
               )}
             />
-
             {mode === "employees" && (
-              <FormField
-                control={form.control}
-                name="is_candidate"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                    <FormLabel>Is Candidate?</FormLabel>
-                    <FormControl>
-                      <Switch checked={field.value} onCheckedChange={field.onChange} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
-
-            {mode === "candidates" && (
               <FormField
                 control={form.control}
                 name="is_role_model"
@@ -295,13 +270,12 @@ const EmployeeSheet = ({ id, open, setOpen, employee, companyId }: EmployeeSheet
                 )}
               />
             )}
-
             <Button type="submit" className="mt-auto w-full" disabled={isLoading || isLoadingUpdate}>
               {isLoading || isLoadingUpdate ? (
                 <Loader2 className="size-4 animate-spin" />
               ) : (
                 <>
-                  {id ? "Edit" : "Add"} {mode === "employees" ? "Candidate" : "Employee"}
+                  {id ? "Edit" : "Add"} {mode === "employees" ? "Employee" : "Candidate"}
                 </>
               )}
             </Button>
