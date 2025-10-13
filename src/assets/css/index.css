@@ -136,3 +136,40 @@
 ::-webkit-scrollbar {
   display: none;
 }
+
+/* Markdown preview dark mode table fixes */
+.markdown-content table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.markdown-content table th,
+.markdown-content table td {
+  border: 1px solid hsl(var(--border));
+  padding: 0.5rem;
+}
+
+.markdown-content table th {
+  background-color: hsl(var(--muted));
+  font-weight: 600;
+}
+
+.markdown-content table tr:nth-child(even) {
+  background-color: hsl(var(--muted) / 0.3);
+}
+
+/* Dark mode specific table styles */
+[data-color-mode="dark"] .markdown-content table th,
+[data-color-mode="dark"] .markdown-content table td {
+  color: hsl(var(--foreground));
+  border-color: hsl(var(--border));
+}
+
+[data-color-mode="dark"] .markdown-content table th {
+  background-color: hsl(var(--muted));
+}
+
+[data-color-mode="dark"] .markdown-content table tr:nth-child(even) {
+  background-color: hsl(var(--muted) / 0.3);
+}

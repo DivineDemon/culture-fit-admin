@@ -71,7 +71,6 @@ const UserDetail = () => {
             <p className="font-semibold text-base sm:text-lg">Company Email</p>
             <p className="text-muted-foreground text-sm">{company?.company_email || "N/A"}</p>
           </div>
-
           <div className="flex flex-col rounded-lg border p-4 shadow">
             <p className="font-semibold text-base sm:text-lg">Owner Name</p>
             <p className="text-muted-foreground text-sm">{company?.owner_name || "N/A"}</p>
