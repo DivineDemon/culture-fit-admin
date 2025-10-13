@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import type { RootState } from "@/types/global";
 import { Input } from "./ui/input";
 
 interface UploadModalProps {
@@ -13,12 +15,15 @@ interface UploadModalProps {
 
 const UploadReport = ({ open, onClose, companyId, employeeId }: UploadModalProps) => {
   const [fileText, setFileText] = useState("");
+  const { token } = useSelector((state: RootState) => state.global);
+
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const _res = await fetch("/candidate-culture-report/", {
+    await fetch("https://culture-fit-backend.vercel.app/candidate-culture-report/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         user_id: employeeId,
@@ -37,7 +42,7 @@ const UploadReport = ({ open, onClose, companyId, employeeId }: UploadModalProps
         </DialogHeader>
 
         <form onSubmit={submit} className="space-y-4">
-          <Input type="text" onClick={(e) => setFileText(e.target.value)} value={fileText} />
+          <Input type="text" onChange={(e) => setFileText(e.target.value)} value={fileText} />
           <Button type="submit">Upload</Button>
         </form>
       </DialogContent>
