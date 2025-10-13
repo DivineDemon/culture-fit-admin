@@ -42,7 +42,13 @@ declare type Policy = {
 declare type EmployeeFile = {
   id: string;
   file_name: string;
-  file_data: string;
+  file_data?: string | null;
+  file_text?: string | null;
+  ai_summary?: string | null;
+  fit_score?: number | null;
+  recommendation?: string | null;
+  created_at?: string | null;
+  source: "ExtractedText" | "CandidateCultureReport";
 };
 
 declare type CompanyFile = {
@@ -81,4 +87,12 @@ declare type EmployeeResponse = {
   is_role_model: boolean;
   is_candidate: boolean;
   files: EmployeeFile[];
+};
+
+declare type CandidateReport = {
+  id: string;
+  ai_summary: string | null,
+  fit_score: number,
+  recommendation: string,
+  created_at: string
 };
