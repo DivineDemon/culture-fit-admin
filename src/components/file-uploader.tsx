@@ -62,7 +62,7 @@ const UploadModal = ({ open, onClose, onUpload, companyId, employeeId }: UploadM
       onUpload(uploadedFiles);
       setUploadedFiles([]);
       onClose();
-    } catch (_error) {
+    } catch {
       toast.error("Something went wrong, please try again!");
     } finally {
       setIsLoading(false);

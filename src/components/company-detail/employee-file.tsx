@@ -82,7 +82,6 @@ const EmployeeFile = ({ id, company_id }: EmployeeFileProps) => {
           </div>
         </CardContent>
       </Card>
-
       <DocumentViewer
         open={open}
         document={selectedFile?.file_data || selectedFile?.file_text || ""}

@@ -1,5 +1,5 @@
 import MDEditor from "@uiw/react-md-editor";
-import { Download } from "lucide-react";
+import { Download, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { downloadMarkdownAsPDF } from "@/lib/utils";
 import { useTheme } from "./theme-provider";
@@ -69,8 +69,13 @@ const DocumentViewer = ({ open, document, documentName, setOpen }: DocumentViewe
               }
             }}
           >
-            <Download className={isGeneratingPDF ? "animate-spin" : ""} />
-            {isGeneratingPDF ? "Generating PDF..." : "Download PDF"}
+            {isGeneratingPDF ? (
+              <Loader2 className="animate-spin" />
+            ) : (
+              <>
+                <Download /> Download PDF
+              </>
+            )}
           </Button>
         </div>
       </DialogContent>
