@@ -1,5 +1,11 @@
 import type { Column, Row } from "@tanstack/react-table";
-import { ArrowDownAZ, FilePenLine, FileText, MoreHorizontal, Upload } from "lucide-react";
+import {
+  ArrowDownAZ,
+  FilePenLine,
+  FileText,
+  MoreHorizontal,
+  Upload,
+} from "lucide-react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import EmployeeSheet from "@/components/company-detail/employee-add-sheet";
@@ -53,7 +59,12 @@ const ActionsCell = ({ row }: { row: Row<EmployeeResponse> }) => {
         companyId={row.original.company_id}
         employee={row.original}
       />
-      <EmployeeDetailSheet id={row.original.id} open={detailOpen} setOpen={setDetailOpen} employee={row.original} />
+      <EmployeeDetailSheet
+        id={row.original.id}
+        open={detailOpen}
+        setOpen={setDetailOpen}
+        employee={row.original}
+      />
 
       <UploadReport
         open={uploadOpen}
@@ -62,7 +73,6 @@ const ActionsCell = ({ row }: { row: Row<EmployeeResponse> }) => {
         employeeId={row.original.user_id ?? ""}
         companyId={row.original.company_id}
       />
-      
     </>
   );
 };
@@ -72,20 +82,28 @@ export const useEmployeeColumns = () => {
     {
       accessorKey: "name",
       header: ({ column }: { column: Column<EmployeeResponse> }) => (
-        <Button variant="ghost" type="button" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+        <Button
+          variant="ghost"
+          type="button"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
           Name
           <ArrowDownAZ className="ml-2" />
         </Button>
       ),
       cell: ({ row }: { row: Row<EmployeeResponse> }) => (
-        <span className="ml-3 font-medium capitalize">{row.getValue("name")}</span>
+        <span className="ml-3 font-medium capitalize">
+          {row.getValue("name")}
+        </span>
       ),
     },
     {
       accessorKey: "email",
       header: "Email",
       cell: ({ row }: { row: Row<EmployeeResponse> }) => (
-        <span className="font-semibold text-[#71717A] text-sm">{row.getValue("email")}</span>
+        <span className="font-semibold text-[#71717A] text-sm">
+          {row.getValue("email")}
+        </span>
       ),
     },
     {
@@ -112,7 +130,9 @@ export const useEmployeeColumns = () => {
     {
       id: "actions",
       header: "Actions",
-      cell: ({ row }: { row: Row<EmployeeResponse> }) => <ActionsCell row={row} />,
+      cell: ({ row }: { row: Row<EmployeeResponse> }) => (
+        <ActionsCell row={row} />
+      ),
     },
   ];
 };

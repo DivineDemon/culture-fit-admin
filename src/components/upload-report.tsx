@@ -1,20 +1,7 @@
-import { X } from "lucide-react";
 import { useState } from "react";
-import { useDropzone } from "react-dropzone";
-import { toast } from "sonner";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { callWebhook } from "@/lib/api";
-import { extractTextFromPDF } from "@/lib/utils";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "./ui/input";
-import { file } from "zod";
 
 interface UploadModalProps {
   open: boolean;
@@ -24,17 +11,11 @@ interface UploadModalProps {
   employeeId?: string;
 }
 
-const UploadReport = ({
-  open,
-  onClose,
-  companyId,
-  employeeId,
-}: UploadModalProps) => {
-
+const UploadReport = ({ open, onClose, companyId, employeeId }: UploadModalProps) => {
   const [fileText, setFileText] = useState("");
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const res = await fetch("/candidate-culture-report/", {
+    const _res = await fetch("/candidate-culture-report/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -52,9 +33,7 @@ const UploadReport = ({
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle className="font-semibold text-lg">
-            Upload Files
-          </DialogTitle>
+          <DialogTitle className="font-semibold text-lg">Upload Files</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={submit} className="space-y-4">
