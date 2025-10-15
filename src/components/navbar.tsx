@@ -46,7 +46,7 @@ const Navbar = () => {
   return (
     <>
       <nav className="fixed top-0 z-[2] h-16 w-full border-b backdrop-blur">
-        <MaxWidthWrapper className="flex items-center justify-between px-5 py-2.5 lg:px-0">
+        <MaxWidthWrapper className="flex items-center justify-between px-5 py-2.5 xl:px-0">
           <img
             src={theme === "dark" ? Logo : LogoBlack}
             alt="logo"

@@ -1,5 +1,5 @@
 declare type GlobalState = {
-  Company: string;
+  selectedCompany: string;
   token: string;
   mode: "employees" | "candidates";
 };

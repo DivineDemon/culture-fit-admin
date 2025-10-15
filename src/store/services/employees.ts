@@ -34,7 +34,7 @@ export const employees = api.injectEndpoints({
         method: "GET",
       }),
       providesTags: ["employees"],
-      transformResponse: (response: EmployeeResponse) => response,
+      transformResponse: (response: { message: string; status_code: number; data: EmployeeResponse }) => response.data,
     }),
     getEmployeeFile: build.query<EmployeeFile[], { id: string; company_id: string }>({
       query: ({ id, company_id }) => ({

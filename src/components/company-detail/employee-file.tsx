@@ -10,13 +10,14 @@ import { Button } from "../ui/button";
 
 interface EmployeeFileProps {
   id: string;
+  name: string;
   company_id: string;
 }
 
-const EmployeeFile = ({ id, company_id }: EmployeeFileProps) => {
+const EmployeeFile = ({ id, name, company_id }: EmployeeFileProps) => {
   const [open, setOpen] = useState(false);
-  const { mode } = useSelector((state: RootState) => state.global);
   const [selectedFile, setSelectedFile] = useState<EmployeeFile | null>(null);
+  const { mode, selectedCompany } = useSelector((state: RootState) => state.global);
 
   const { data: files, isLoading, error } = useGetEmployeeFileQuery({ id, company_id }, { skip: !id || !company_id });
 
@@ -27,7 +28,7 @@ const EmployeeFile = ({ id, company_id }: EmployeeFileProps) => {
 
   if (isLoading) {
     return (
-      <div className="flex h-full w-full items-center justify-center rounded-2xl border">
+      <div className="flex h-full w-full items-center justify-center rounded-2xl border py-10">
         <Loader2 className="size-8 animate-spin text-primary" />
       </div>
     );
@@ -62,7 +63,11 @@ const EmployeeFile = ({ id, company_id }: EmployeeFileProps) => {
                   </div>
 
                   <div className="flex-1">
-                    <h3 className="font-medium text-sm">{truncateString(file?.file_name, 28)}</h3>
+                    <h3 className="font-medium text-sm">
+                      {file.source === "CandidateCultureReport"
+                        ? `Culture Fit Report - ${name} - ${selectedCompany}`
+                        : truncateString(file?.file_name, 28)}
+                    </h3>
                     <p className="text-muted-foreground text-xs">
                       Uploaded on {file?.created_at ? new Date(file?.created_at).toLocaleDateString() : "N/A"}
                     </p>

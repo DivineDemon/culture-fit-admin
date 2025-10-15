@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState: GlobalState = {
-  Company: "",
+  selectedCompany: "",
   token: "",
   mode: "employees",
 };
@@ -10,8 +10,8 @@ const globalSlice = createSlice({
   name: "global",
   initialState,
   reducers: {
-    setCompany: (state, action) => {
-      state.Company = action.payload;
+    setSelectedCompany: (state, action) => {
+      state.selectedCompany = action.payload;
     },
     setToken: (state, action) => {
       state.token = action.payload;
@@ -22,5 +22,5 @@ const globalSlice = createSlice({
   },
 });
 
-export const { setCompany, setToken, setMode } = globalSlice.actions;
+export const { setSelectedCompany, setToken, setMode } = globalSlice.actions;
 export default globalSlice.reducer;

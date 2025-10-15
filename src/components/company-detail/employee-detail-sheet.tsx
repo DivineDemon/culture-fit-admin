@@ -24,6 +24,7 @@ const EmployeeDetailSheet = ({ open, setOpen, employee }: EmployeeDetailSheetPro
   if (!employee) {
     return null;
   }
+
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetContent className="md:w-full lg:min-w-md">
@@ -79,7 +80,7 @@ const EmployeeDetailSheet = ({ open, setOpen, employee }: EmployeeDetailSheetPro
               <Label className="text-muted-foreground text-sm">Role Model:</Label>
               <p className="col-span-2 font-medium text-foreground text-sm">{data.is_role_model ? "Yes" : "No"}</p>
             </div>
-            <EmployeeFile id={employee?.id ?? ""} company_id={employee?.company_id} />
+            <EmployeeFile name={data.name} id={employee?.id ?? ""} company_id={employee?.company_id} />
           </div>
         ) : (
           <div className="flex h-40 items-center justify-center">
