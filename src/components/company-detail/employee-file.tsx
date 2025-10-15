@@ -1,11 +1,4 @@
-import {
-  CircleAlert,
-  FileIcon,
-  FileText,
-  Loader2,
-  Paperclip,
-  TriangleAlert,
-} from "lucide-react";
+import { CircleAlert, FileIcon, FileText, Loader2, Paperclip, TriangleAlert } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -26,30 +19,21 @@ const EmployeeFile = ({ id, name, company_id }: EmployeeFileProps) => {
   const [selectedFile, setSelectedFile] = useState<EmployeeFile | null>(null);
   const [interviewContent, setInterviewContent] = useState<string>("");
   const [isLoadingInterview, setIsLoadingInterview] = useState(false);
-  const { mode, selectedCompany } = useSelector(
-    (state: RootState) => state.global
-  );
+  const { mode, selectedCompany } = useSelector((state: RootState) => state.global);
 
-  const {
-    data: files,
-    isLoading,
-    error,
-  } = useGetEmployeeFileQuery({ id, company_id }, { skip: !id || !company_id });
+  const { data: files, isLoading, error } = useGetEmployeeFileQuery({ id, company_id }, { skip: !id || !company_id });
 
   // Function to match candidate name with markdown file
-  const getInterviewFileName = useCallback(
-    (candidateName: string): string | null => {
-      // Convert name to match file naming pattern: "FirstName_LastName_Interview.md"
-      const nameParts = candidateName.trim().split(" ");
-      if (nameParts.length >= 2) {
-        const firstName = nameParts[0];
-        const lastName = nameParts[nameParts.length - 1];
-        return `${firstName}_${lastName}_Interview.md`;
-      }
-      return null;
-    },
-    []
-  );
+  const getInterviewFileName = useCallback((candidateName: string): string | null => {
+    // Convert name to match file naming pattern: "FirstName_LastName_Interview.md"
+    const nameParts = candidateName.trim().split(" ");
+    if (nameParts.length >= 2) {
+      const firstName = nameParts[0];
+      const lastName = nameParts[nameParts.length - 1];
+      return `${firstName}_${lastName}_Interview.md`;
+    }
+    return null;
+  }, []);
 
   // Function to fetch markdown content
   const fetchInterviewContent = useCallback(async (fileName: string) => {
@@ -128,9 +112,7 @@ const EmployeeFile = ({ id, name, company_id }: EmployeeFileProps) => {
       <Card className="h-full w-full shadow-none">
         <CardHeader>
           <CardTitle className="font-semibold text-primary text-xl">
-            {mode === "employees"
-              ? "Employee Documents"
-              : "Candidate Documents"}
+            {mode === "employees" ? "Employee Documents" : "Candidate Documents"}
           </CardTitle>
         </CardHeader>
         <CardContent className="h-full space-y-4 overflow-y-scroll">
@@ -143,19 +125,11 @@ const EmployeeFile = ({ id, name, company_id }: EmployeeFileProps) => {
                 </div>
 
                 <div className="flex-1">
-                  <h3 className="font-medium text-sm">
-                    Interview Transcript - {name}
-                  </h3>
-                  <p className="text-muted-foreground text-xs">
-                    Culture-fit interview questions and responses
-                  </p>
+                  <h3 className="font-medium text-sm">Interview Transcript - {name}</h3>
+                  <p className="text-muted-foreground text-xs">Culture-fit interview questions and responses</p>
                 </div>
 
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  onClick={handleOpenInterviewModal}
-                >
+                <Button size="icon" variant="ghost" onClick={handleOpenInterviewModal}>
                   <Paperclip className="size-4 text-muted-foreground" />
                 </Button>
               </div>
@@ -165,19 +139,14 @@ const EmployeeFile = ({ id, name, company_id }: EmployeeFileProps) => {
             {mode === "candidates" && isLoadingInterview && (
               <div className="flex w-full items-center justify-center gap-2.5 border-b pb-3">
                 <Loader2 className="size-4 animate-spin text-primary" />
-                <p className="text-muted-foreground text-sm">
-                  Loading interview transcript...
-                </p>
+                <p className="text-muted-foreground text-sm">Loading interview transcript...</p>
               </div>
             )}
 
             {/* Regular Files */}
             {files && files.length > 0 ? (
               files.map((file: EmployeeFile, idx: number) => (
-                <div
-                  key={idx}
-                  className="flex w-full items-center justify-between gap-2.5 border-b pb-3"
-                >
+                <div key={idx} className="flex w-full items-center justify-between gap-2.5 border-b pb-3">
                   <div className="flex size-10 items-center justify-center rounded-full bg-primary p-2 text-white">
                     <FileText className="size-full" />
                   </div>
@@ -190,17 +159,11 @@ const EmployeeFile = ({ id, name, company_id }: EmployeeFileProps) => {
                     </h3>
                     <p className="text-muted-foreground text-xs">
                       Uploaded on&nbsp;
-                      {file?.created_at
-                        ? new Date(file?.created_at).toLocaleDateString()
-                        : "N/A"}
+                      {file?.created_at ? new Date(file?.created_at).toLocaleDateString() : "N/A"}
                     </p>
                   </div>
 
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    onClick={() => handleOpenModal(file)}
-                  >
+                  <Button size="icon" variant="ghost" onClick={() => handleOpenModal(file)}>
                     <Paperclip className="size-4 text-muted-foreground" />
                   </Button>
                 </div>
