@@ -27,7 +27,7 @@ const EmployeeDetailSheet = ({ open, setOpen, employee }: EmployeeDetailSheetPro
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <SheetContent className="md:w-full lg:min-w-md">
+      <SheetContent className="md:w-full lg:min-w-md overflow-auto">
         <SheetHeader>
           <SheetTitle className="font-semibold text-lg">
             {mode === "employees" ? "Employee Details" : "Candidate Details"}
