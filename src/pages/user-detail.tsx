@@ -161,7 +161,26 @@ const UserDetail = () => {
           companyId={id ?? ""}
         />
       </div>
-      <CompanySheet id={id} open={edit} setOpen={setEdit} company={company} />
+      <CompanySheet
+        id={id}
+        open={edit}
+        setOpen={setEdit}
+        company={
+          company
+            ? {
+                company_name: company.company_name,
+                company_email: company.company_email ?? "",
+                owner_name: company.owner_name,
+                owner_email: company.owner_email,
+                company_type: company.company_type,
+                company_website: company.company_website,
+                phone_number: company.phone_number,
+                company_address: company.company_address,
+                company_description: company.company_description,
+              }
+            : undefined
+        }
+      />
     </>
   );
 };

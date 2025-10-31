@@ -24,14 +24,14 @@ declare type CompanyInfo = {
   company_name: string;
   company_email?: string;
   password?: string;
-  owner_name: string;
-  owner_email: string;
-  website: string;
-  company_type: string;
-  phone_number: string;
-  address: string;
-  company_description: string;
-  company_files: CompanyFile[];
+  owner_name?: string;
+  owner_email?: string;
+  company_website?: string;
+  company_type?: string;
+  phone_number?: string;
+  company_address?: string;
+  company_description?: string;
+  company_files?: CompanyFile[];
 };
 
 declare type Policy = {

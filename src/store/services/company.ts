@@ -12,13 +12,13 @@ export const companies = api.injectEndpoints({
       transformResponse: (response: { status_code: number; message: string; data: CompanyInfo }) => response.data,
     }),
 
-    getCompanies: build.query<CompanyInfo, void>({
+    getCompanies: build.query<CompanyInfo[], void>({
       query: () => ({
         url: "/companies/",
         method: "GET",
       }),
       providesTags: ["companies"],
-      transformResponse: (response: { status_code: number; message: string; data: CompanyInfo }) => response.data,
+      transformResponse: (response: { status_code: number; message: string; data: CompanyInfo[] }) => response.data,
     }),
     getCompany: build.query({
       query: (id: string) => ({

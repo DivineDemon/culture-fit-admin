@@ -40,22 +40,22 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
 
   const onSubmit = async (data: z.infer<typeof companySchema>) => {
     if (id) {
+      const updateData: CompanyInfo = {
+        id: id,
+        company_name: data.company_name ?? "",
+        company_email: data.company_email ?? "",
+        password: data.password ?? "",
+        owner_name: data.owner_name ?? "",
+        owner_email: data.owner_email ?? "",
+        company_website: data.company_website ?? "",
+        company_type: data.company_type ?? "",
+        phone_number: data.phone_number ?? "",
+        company_address: data.company_address ?? "",
+        company_description: data.company_description ?? "",
+      };
       const response = await updateCompany({
         id,
-        data: {
-          ...data,
-          id: id,
-          company_name: data.company_name ?? "",
-          company_email: data.company_email ?? "",
-          password: data.password ?? "",
-          owner_name: data.owner_name ?? "",
-          owner_email: data.owner_email ?? "",
-          company_website: data.company_website ?? "",
-          company_type: data.company_type ?? "",
-          phone_number: data.phone_number ?? "",
-          company_address: data.company_address ?? "",
-          company_description: data.company_description ?? "",
-        },
+        data: updateData,
       });
       if (response.data) {
         toast.success("Company Updated Successfully!");
@@ -66,19 +66,19 @@ const CompanySheet = ({ id, open, setOpen, company }: CompanySheetProps) => {
       return;
     }
 
-    const response = await postCompany({
-      ...data,
-      company_website: data.company_website ?? "",
-      company_email: data.company_email ?? "",
+    const postData: CompanyInfo = {
       company_name: data.company_name ?? "",
-      company_type: data.company_type ?? "",
+      company_email: data.company_email ?? "",
+      password: data.password ?? "",
       owner_name: data.owner_name ?? "",
       owner_email: data.owner_email ?? "",
+      company_website: data.company_website ?? "",
+      company_type: data.company_type ?? "",
       phone_number: data.phone_number ?? "",
       company_address: data.company_address ?? "",
       company_description: data.company_description ?? "",
-      password: data.password ?? "",
-    });
+    };
+    const response = await postCompany(postData);
 
     if (response.data?.id) {
       toast.success("Company Created Successfully!");

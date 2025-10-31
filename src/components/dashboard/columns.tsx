@@ -56,14 +56,14 @@ export const useRowColumns = () => {
       ),
     },
     {
-      accessorKey: "address",
+      accessorKey: "company_address",
       header: "Address",
       cell: ({ row }: { row: Row<CompanyInfo> }) => (
         <span
           onClick={() => handleRowClick(row.original.id, row.original.company_name)}
           className="w-full cursor-pointer font-semibold text-[#71717A] text-sm hover:underline"
         >
-          {row.getValue("address") || "N/A"}
+          {row.getValue("company_address") || "N/A"}
         </span>
       ),
     },

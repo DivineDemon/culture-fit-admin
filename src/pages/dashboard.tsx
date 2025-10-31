@@ -54,10 +54,8 @@ const Dashboard = () => {
               columns={columns}
               data={
                 search
-                  ? ((companies ?? []) as CompanyInfo[]).filter((e) =>
-                      e.company_email.toLowerCase().includes(search.toLowerCase()),
-                    )
-                  : ((companies ?? []) as CompanyInfo[])
+                  ? (companies ?? []).filter((e) => e.company_email?.toLowerCase().includes(search.toLowerCase()))
+                  : (companies ?? [])
               }
             />
           )}
