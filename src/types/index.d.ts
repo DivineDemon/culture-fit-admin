@@ -14,21 +14,24 @@ declare type PostLoginResponse = {
   message: string;
   data: {
     access_token: string;
+    role: string;
+    email: string;
   };
 };
 
 declare type CompanyInfo = {
   id?: string;
   company_name: string;
-  company_email: string;
+  company_email?: string;
   password?: string;
   owner_name: string;
   owner_email: string;
-  company_website: string;
+  website: string;
   company_type: string;
   phone_number: string;
-  company_address: string;
+  address: string;
   company_description: string;
+  company_files: CompanyFile[];
 };
 
 declare type Policy = {
@@ -54,6 +57,7 @@ declare type EmployeeFile = {
 declare type CompanyFile = {
   id: string;
   file_name: string;
+  folder_id: string | null;
   file_data: string;
 };
 
